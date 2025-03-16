@@ -1,0 +1,46 @@
+<div class="flex flex-col h-full">
+  <div class="m-auto flex flex-col gap-5 items-center">
+    <h3 class="font-bold text-lg">Register a new Technician</h3>
+    <form [formGroup]="form" class="flex flex-col gap-2 w-full" (ngSubmit)="handleSubmit($event)">
+      <mer-input-text-field [fieldDefinition]="code_validation" />
+      <mer-input-text-field [fieldDefinition]="firstname_validation" />
+      <mer-input-text-field [fieldDefinition]="lastname_validation" />
+      <mer-input-text-field [fieldDefinition]="password_validation" />
+    <div class="grid grid-flow-col justify-stretch gap-2">
+      <button class="btn btn-info" type="submit">
+        Save new User
+      </button>
+    </div>
+  </form>
+
+    <p>
+      Or
+      <a
+        class="btn btn-success"
+        [routerLink]="publicRouteConstants.LOGIN"
+      >
+        Go Back
+      </a>
+      to the login page
+    </p>
+  </div>
+</div>
+{{stateDialog()|json}}
+<dialog id="registerd-success" class="modal" [class.modal-open]="stateDialog()">
+  <div class="modal-box w-11/12 max-w-2xl">
+
+    <h3 class="font-bold text-lg">User created succesfully</h3>
+    <div class="mt-4">
+      You can now login with the new user
+    </div>
+    <div class="modal-action">
+      <a
+        class="btn btn-sm "
+        [routerLink]="publicRouteConstants.LOGIN"
+      >
+        Close Dialog
+      </a>
+    </div>
+  </div>
+</dialog>
+

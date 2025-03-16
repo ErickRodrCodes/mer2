@@ -24,6 +24,10 @@ export default [
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*'],
             },
+            {
+              sourceTag: 'scope:frontend-electron',
+              notDependOnLibsWithTags: ['scope:mer-types'],
+            },
           ],
         },
       ],

@@ -1,0 +1,85 @@
+<div class="navbar bg-primary select-none shadow-lg">
+  <div class="container mx-auto flex flex-row gap-2">
+    <div class="navbar-start gap-2">
+
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+        <span
+          class="tooltip tooltip-bottom before:text-xs before:content-[attr(data-tip)]"
+          data-tip="Menu"
+          ><label
+            aria-label="Open menu"
+            for="my-drawer"
+            class="btn btn-square btn-ghost drawer-button"
+            ><svg
+              width="20"
+              height="20"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              class="inline-block h-5 w-5 stroke-current md:h-6 md:w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path></svg></label
+        ></span>
+        <span class="text-xl">
+          Equipment Logger and Reporter
+        </span>
+    </div>
+    <div class="navbar-center gap-2"></div>
+    <div class="navbar-end gap-2">
+      <div class="flex-none">
+        @if(userInfo().isLoggedIn) { Current Technician Code:
+        <span class="text-green-600">{{userInfo().technicianFirstName}} {{userInfo().technicianLastName}} </span>
+        } @else { ⚠️ Technician code not set. }
+      </div>
+      <div class="flex-none">
+        @if(userInfo().isLoggedIn) {
+        <button
+          class="tooltip tooltip-bottom before:text-xs before:content-[attr(data-tip)]"
+          data-tip="Logout"
+          (click)="sessionService.logout()"
+        >
+          <label
+            aria-label="Logout"
+            htmlFor="logout-modal"
+            class="btn btn-square btn-ghost"
+          >
+            <!--
+                  style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                  -->
+
+            <svg
+              id="Exit_24"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
+              <rect
+                width="24"
+                height="24"
+                stroke="none"
+                fill="#000000"
+                opacity="0"
+              />
+              <g transform="matrix(1 0 0 1 12 12)">
+                <path
+                  class="inline-block h-5 w-5 stroke-current md:h-6 md:w-6 fill-current"
+                  transform=" translate(-12.5, -12)"
+                  d="M 6 2 C 4.897 2 4 2.897 4 4 L 4 20 C 4 21.103 4.897 22 6 22 L 18 22 C 19.103 22 20 21.103 20 20 L 20 15.25 L 18.001953 16.748047 L 18.001953 20 L 6 20 L 6 4 L 18 4 L 18 7.25 L 20 8.75 L 20 4 C 20 2.897 19.103 2 18 2 L 6 2 z M 16 8.25 L 16 11 L 11 11 L 11 13 L 16 13 L 16 15.75 L 21 12 L 16 8.25 z"
+                  stroke-linecap="round"
+                />
+              </g>
+            </svg>
+          </label>
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

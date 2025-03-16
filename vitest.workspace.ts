@@ -1,4 +1,7 @@
-export default [
-  '**/vite.config.{mjs,js,ts,mts}',
-  '**/vitest.config.{mjs,js,ts,mts}',
-];
+import { defineWorkspace } from 'vitest/config'
+
+export default defineWorkspace([
+  "libs/**/*/vite.config.ts",
+  "apps/**/*/vite.config.ts",
+  "!libs/spartan-ui/**/*",
+])

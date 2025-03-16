@@ -1,0 +1,6 @@
+{
+  "better-sqlite3": {
+    "path": "./better-sqlite3/better-sqlite3.node",
+    "version": "11.9.1"
+  }
+}

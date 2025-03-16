@@ -1,0 +1,52 @@
+<label [for]="id()" [hidden]="hidden()" class="form-control w-full flex" [attr.key]="keyValue()">
+  <hlm-form-field (diplayErrorMessage)="captureErrorState($event)">
+    <div class="label">
+      <span class="label-text mb-1" [class.text-error]="hasError()">
+        {{ label() }}
+      </span>
+    </div>
+
+    <!-- Hidden input for validation -->
+  <input
+  hlmInput
+  type="text"
+  class="hidden"
+  aria-hidden="true"
+  [formControl]="inputControl"
+  [attr.name]="id() "/>
+<!-- Radio options as DaisyUI join buttons -->
+<div class="join w-full h-full"  [class.join-vertical]="layout() === 'vertical'">
+  @for (option of options(); track option.id) {
+    <input
+      type="radio"
+      class="join-item btn btn-sm btn-primary [&[checked=true]]:btn-info print:bg-white print:text-gray-500 print:border-gray-500 print:[&[checked=true]]:bg-gray-300 print:[&[checked=true]]:text-black print:[&[checked=true]]:border-gray-500 print:shadow-none" [class.h-full]="layout() !== 'vertical'"
+      [id]="option.id"
+      [attr.aria-label]="option.label"
+      [value]="option.value"
+      [attr.checked]="inputControl.value === option.value"
+      [disabled]="option.disabled ?? false"
+      (change)="onChangeEvent($event)"
+      (blur)="onBlurEvent($event)"
+      name="{{id()}}"
+    />
+  }
+</div>
+
+    <!-- Show loading indicator during async validation -->
+    @if (asyncValidationPending()) {
+    <div class="label-text-alt flex items-center">
+      <span class="mr-2">Validating...</span>
+      <!-- Simple loading spinner -->
+      <div
+        class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
+      ></div>
+    </div>
+    }
+
+    <hlm-error>
+      <div class="label-text-alt error mt-1">
+        {{ errorMessage() }}
+      </div>
+    </hlm-error>
+  </hlm-form-field>
+</label>

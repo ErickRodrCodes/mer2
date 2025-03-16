@@ -1,1 +1,40 @@
+@use "tailwindcss";
+
+@use "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@use "@fortawesome/fontawesome-free/scss/solid.scss";
+
+@plugin "daisyui" {
+  themes: dark, light, dark --default, dark --prefersdark, cupcake;
+}
+
+.typeahead-container {
+  @apply relative;
+
+  & .typeahead-results{
+    transform:translateY(.5em);
+    @apply text-primary-content overflow-hidden rounded-md shadow-lg shadow-black bg-slate-300 p-1 absolute w-full;
+
+    & li {
+      padding:0.25rem 0.5rem;
+      @apply hover:bg-slate-800 rounded-lg hover:text-white cursor-pointer;
+    }
+  }
+}
+
 /* You can add global styles to this file, and also import other style files */
+@media print {
+  :is(.checkbox:checked, .checkbox[aria-checked=true]):before {
+    position: absolute;
+
+        left: 0px;
+        top: 3px;
+  }
+}
+
+body {
+  @apply h-full;
+}
+
+.drawer {
+  @apply h-full;
+}

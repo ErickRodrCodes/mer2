@@ -1,0 +1,234 @@
+<div class="container mx-auto">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="handleSubmit($event)"
+    class="grid grid-cols-6 gap-y-3 gap-x-2"
+  >
+    <!-- Hidden field for PK_Intake -->
+    <mer-input-text-field [fieldDefinition]="consecutiveNumber" [value]="newConsecutiveNumber()" />
+
+    <!-- First row -->
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="ACNumber" class="pointer-events-none" [value]="newConsecutiveNumber()"/>
+    </div>
+    <div class="col-start-2 col-span-3">
+      <mer-input-text-field [fieldDefinition]="sonographer"  />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="faxNumber" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="dateOfService" />
+    </div>
+
+    <!-- Payment section -->
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="amountToBePaid" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="checkNumber" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="cash" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="creditCard" />
+    </div>
+    <div class="col-span-2"></div>
+
+    <!-- Facility location and type -->
+    <div class="col-span-2">
+      <mer-radio-group [fieldDefinition]="facilityLocationOption" />
+    </div>
+
+    <!-- Facility information -->
+    <div class="col-span-2">
+      <mer-input-typeahead-field [fieldDefinition]="facilityName"
+      fieldKey="PK_facility"
+      [formatOptionLabel]="facilityLabelFn"
+      (selectResult)="handleFacilitySelect($event)"
+      (currentValue)="handleFacilityCurrentValue($event)"
+      [typeAheadResults]="facilitySearchResults()" />
+    </div>
+    <div class="col-span-2">
+      <mer-input-text-field [fieldDefinition]="facilityAddress" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="facilityCity" />
+    </div>
+    <div>
+      <mer-input-text-field [fieldDefinition]="facilityState" />
+    </div>
+    <div>
+      <mer-input-text-field [fieldDefinition]="facilityZipcode" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="withAdmitDate" />
+    </div>
+
+    <!-- Patient information -->
+    <div class="">
+      <mer-input-typeahead-field [fieldDefinition]="identification"
+      fieldKey="PK_Patient"
+      [formatOptionLabel]="identificationLabelFn"
+      (selectResult)="handleIdentificationSelect($event)"
+      (currentValue)="handleIdentificationCurrentValue($event)"
+      [typeAheadResults]="identificationSearchResults()" />
+    </div>
+    <div></div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="patientMedicareNumber" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="patientFirstName" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="patientLasttName" />
+    </div>
+    <div class="">
+      <mer-input-text-field [fieldDefinition]="patientDOB" />
+    </div>
+    <div class="">
+      <!-- TODO: Implement patientSex radio pills -->
+      <mer-radio-group [fieldDefinition]="patientSex" />
+    </div>
+
+    <!-- Insurance information -->
+    <div class="col-span-3 grid grid-flow-col justify-stretch gap-2">
+      <mer-input-text-field [fieldDefinition]="primaryInsurance" />
+      <mer-input-text-field [fieldDefinition]="primaryInsurancePolicyNumber" />
+      <mer-input-text-field [fieldDefinition]="secondaryInsurance" />
+      <mer-input-text-field
+        [fieldDefinition]="secondaryInsurancePolicyNumber"
+      />
+    </div>
+    <div class="col-span-3 grid grid-flow-col justify-stretch gap-2">
+      <mer-input-text-field [fieldDefinition]="authorizationNumber" />
+      <mer-input-text-field [fieldDefinition]="groupNumber" />
+      <mer-input-text-field [fieldDefinition]="orderingPhysician" />
+    </div>
+
+    <!-- Studies performed section -->
+    <div class="col-span-6">
+      <p class="text-lg font-bold text-center">Studies performed</p>
+    </div>
+
+    <div class="col-span-5">
+      <mer-input-text-field [fieldDefinition]="symptomsOrDiagnosis" />
+    </div>
+    <div class="flex flex-col h-full">
+      <div class="grow"></div>
+        <button
+          class="btn w-full btn-info align-bottom"
+          type="button"
+          (click)="openCptDialog.set(true)"
+        >
+          Add CPT Code
+        </button>
+
+    </div>
+    <mer-input-text-field
+    [value]="saveStateCptCodes()|json"
+    [fieldDefinition]="{
+      name: 'cptText',
+      label: 'CPT Text',
+      hidden: true
+    }"
+    />
+    <!-- CPT Codes section -->
+
+
+    <div class="col-span-6 grid grid-cols-3 grid-flow-row-dense gap-2">
+
+      @for (cptCode of selectedCptCodes(); track cptCode.PK_cptcode) {
+        <div class="flex flex-row rounded-md p-1 hover:bg-primary gap-2" [class.col-span-3]="cptCode.type === 'TEXT'">
+          @if (cptCode.type === 'CPT') {
+          <div class="shrink">
+            <div class="font-bold ">{{cptCode.PK_cptcode}}</div>
+            <div class="text-xs uppercase font-semibold opacity-60">{{cptCode.description}}</div>
+          </div>
+          <div class="grid grid-cols-auto grid-flow-col gap-1 grow">
+            @if (hasOptionValues(cptCode.options)) {
+              @for (option of cptCode.options.values; track option) {
+                <label class="label label-lg label-info grid grid-cols-auto gap-1 justify-center text-center">
+                  <input type="checkbox" class="checkbox checkbox-info checkbox-xs mt-1" name
+                  [attr.aria-label]="option.label"
+                  (change)="handleCptCheckboxChange($event, cptCode)"
+                  [name]="cptCode.PK_cptcode"
+                  [value]="option.label"
+                  />
+                  <span class="text-xs uppercase font-semibold">{{option.label}}</span>
+                  </label>
+              }
+            }
+          </div>
+        }
+        @if (cptCode.type === 'TEXT') {
+          <div class="shrink">
+            <div class="font-bold ">Unlisted Procedure</div>
+            <div class="text-xs uppercase font-semibold opacity-60">Describe the procedure</div>
+          </div>
+          <div class="grid grid-cols-auto grid-flow-col gap-1 grow">
+
+            <label class="label label-lg label-info grid grid-cols-1 gap-1 justify-center text-center w-full">
+              <input type="text" class="input text-lg mt-1 w-full"
+              [attr.aria-label]="'Unlisted Procedure'"
+              (input)="handleCptTextChange($event, cptCode)"
+              [name]="cptCode.PK_cptcode"
+              [value]="''"
+              />
+              </label>
+
+
+      </div>
+        }
+        </div>
+      }
+      @empty {
+        <div class="col-span-6 mb-6">
+          <p class="alert alert-warning text-center">
+            No CPT Codes added to this report.
+          </p>
+        </div>
+      }
+      <!-- TODO: Implement CPTTextForm -->
+    </div>
+
+    @if (selectedCptCodes().length > 0) {
+    <button class="btn btn-primary my-3" type="submit">Save form and Print</button>
+    }
+  </form>
+
+  <!-- CPT Code Select Dialog -->
+
+  <!-- TODO: Implement CptCodeSelect dialog -->
+  <mer-cpt-select-dialog
+    [openCptSelectDialog]="openCptDialog()"
+    (selectedCptCodes)="handleCptCodesChange($event)"
+    (closed)="openCptDialog.set(false)"
+  />
+
+
+  <dialog id="CptCodeSelect" class="modal" [class.modal-open]="saveForm()">
+    <div class="modal-box w-11/12 max-w-5xl">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+        ✕
+      </button>
+      <h3 class="font-bold text-lg">PDF is being generated</h3>
+      <div class="mt-4">
+        A PDF file will be generated and displayed on screen. The form
+        <pre class="inline">{{ acNumber }}</pre>
+        was saved successfully.
+      </div>
+      <div class="modal-action">
+        <a
+          class="btn btn-sm btn-error"
+          [routerLink]="protectedRouteConstants.DASHBOARD"
+        >
+          Close Dialog
+        </a>
+      </div>
+    </div>
+  </dialog>
+
+</div>

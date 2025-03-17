@@ -7,7 +7,10 @@
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
-      "dependsOn": ["^build"],
+      "dependsOn": [{
+        "projects": ["frontend"],
+        "target": "build"
+      }],
       "options": {
         "outputPath": "dist/apps/frontend-electron"
       }
@@ -16,12 +19,25 @@
       "executor": "@nx/vite:dev-server",
       "options": {
         "buildTarget": "frontend-electron:build"
+      },
+      "configurations": {
+        "electron": {
+          "dependsOn": ["build"],
+          "commands": [
+            "nx run frontend:serve",
+            "nx run frontend-electron:serve"
+          ],
+          "parallel": true
+        }
       }
     },
     "electron": {
       "configurations": {
         "build": {
-          "dependsOn": ["^build"],
+          "dependsOn": [{
+            "projects": ["frontend-electron"],
+            "target": "build"
+          }],
           "options": {
             "commands": ["nx run frontend-electron:build"],
             "parallel": false
@@ -39,9 +55,14 @@
       "executor": "nx:run-commands",
       "defaultConfiguration": "serve"
     },
-    "icon": {
-      "executor": "@erickrodrcodes/nx-electron-vite:build-icons",
+    "nx-electron-icons": {
+      "executor": "@erickrodrcodes/nx-electron-vite:build-icon",
       "defaultConfiguration": "default",
+      "dependsOn": [
+        {
+        "projects": ["frontend-electron"],
+        "target": "build"
+      }],
       "options": {
         "hostProject": "frontend-electron",
         "hostProjectRoot": "{projectRoot}",
@@ -62,14 +83,9 @@
     },
     "dist": {
       "dependsOn": [
-        "^build",
         {
           "projects": ["frontend-electron"],
-          "target": "electron:build"
-        },
-        {
-          "projects": ["frontend-electron"],
-          "target": "icon"
+          "target": "nx-electron-icons"
         }
       ],
       "executor": "@erickrodrcodes/nx-electron-vite:build-electron",
@@ -78,7 +94,7 @@
         "guestProject": "frontend",
         "hostProjectRoot": "{projectRoot}",
         "mainOutputPath": "dist/apps/frontend-electron",
-        "mainOutputFileName": "main.js",
+        "mainOutputFilename": "main.js",
         "author": "Erick Rodriguez",
         "description": "A Desktop application for the capture of medical billing forms and daily reports"
       }
@@ -98,5 +114,6 @@
     "lint": {
       "dependsOn": ["^lint"]
     }
-  }
+  },
+  "tags": ["scope:frontend-electron"]
 }

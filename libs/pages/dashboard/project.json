@@ -1,0 +1,29 @@
+{
+  "name": "@mer-pages/dashboard",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/pages/dashboard/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/pages/dashboard/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/pages/dashboard/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/pages/dashboard/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

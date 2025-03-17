@@ -1,0 +1,11 @@
+:host :ng-deep {
+    @media print {
+      :is(
+          cptcodes-container .checkbox:checked,
+          .checkbox[aria-checked='true']
+        ):before {
+        rotate: 45deg;
+      }
+    }
+
+}

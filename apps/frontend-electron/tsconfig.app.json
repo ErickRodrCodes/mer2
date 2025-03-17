@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "composite": true,
+    "declaration": true,
     "outDir": "../../dist/out-tsc",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -16,5 +18,10 @@
     "vitest.config.ts",
     "vitest.config.mts"
   ],
-  "include": ["src/**/*.ts", "src/**/*.mts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.mts",
+    "../../libs/types/src/**/*.ts",
+    "../../libs/mer-ui/common/src/index.ts"
+  ]
 }

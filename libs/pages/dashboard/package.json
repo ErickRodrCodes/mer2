@@ -1,0 +1,14 @@
+{
+  "name": "@mer-pages/dashboard",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^19.2.0",
+    "@angular/core": "^19.2.0",
+    "@angular/router": "~19.2.0",
+    "@mer-ui/common": "0.0.1",
+    "vite": "^6.0.0",
+    "@analogjs/vite-plugin-angular": "~1.10.0",
+    "@nx/vite": "20.6.0"
+  },
+  "sideEffects": false
+}

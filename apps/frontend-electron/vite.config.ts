@@ -20,15 +20,10 @@ export default defineConfig({
   ],
   build: {
     outDir: '../../dist/apps/frontend-electron',
-    emptyOutDir: true,
+    emptyOutDir: false,
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
-    },
-    rollupOptions: {
-      output: {
-        entryFileNames: '[name].mjs',
-      },
     },
   },
 });

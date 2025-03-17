@@ -1,0 +1,26 @@
+{
+  "name": "electron-api-types",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "electron-api-types/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/electron-api-types",
+        "main": "electron-api-types/src/index.ts",
+        "tsConfig": "electron-api-types/tsconfig.lib.json",
+        "assets": ["electron-api-types/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "electron-api-types/jest.config.ts"
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<label [for]="id()" [hidden]="hidden()" class="form-control w-full flex" [attr.key]="keyValue()">
+  <hlm-form-field (diplayErrorMessage)="captureErrorState($event)">
+    <div class="label">
+      <span class="label-text mb-1" [class.text-error]="hasError()">
+        {{ label() }}
+      </span>
+    </div>
+    <input
+      hlmInput
+      [type]="type()"
+      [placeholder]="placeholder()"
+      [formControl]="inputControl"
+      [attr.name]="id()"
+      (blur)="onBlurEvent($event)"
+      (input)="onChangeEvent($event)"
+      [value]="value()"
+      [attr.readonly]="readonly() === true ? true : null"
+      class="input input-bordered w-full text-lg print:border-gray-500"
+    />
+
+    <!-- Show loading indicator during async validation -->
+    @if (asyncValidationPending()) {
+    <div class="label-text-alt flex items-center">
+      <span class="mr-2">Validating...</span>
+      <!-- Simple loading spinner -->
+      <div
+        class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
+      ></div>
+    </div>
+    }
+
+    <hlm-error>
+      <div class="label-text-alt error mt-1">
+        {{ errorMessage() }}
+      </div>
+    </hlm-error>
+  </hlm-form-field>
+</label>

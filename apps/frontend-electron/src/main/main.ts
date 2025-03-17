@@ -1,9 +1,10 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 import { createRequire } from 'node:module';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { join } from 'path';
-
-import path from 'node:path';
+import './icpmain';
+import { logger } from './logger';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,19 +15,25 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0);
 }
 
-process.env.APP_ROOT = path.join(__dirname, '..');
+// Set the correct APP_ROOT
+process.env['APP_ROOT'] = path.resolve(__dirname, '../..');
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
-export const MAIN_DIST = path.join(
-  process.env.APP_ROOT,
-  'dist/apps/frontend-electron'
-);
-export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'frontend');
+export const MAIN_DIST = path.join(process.env['APP_ROOT'], 'apps/frontend-electron');
+export const RENDERER_DIST = path.join(process.env['APP_ROOT'], 'apps/frontend');
+export const PREALOAD_PATH = path.join(__dirname, 'preload.js')
 
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
-  ? path.join(process.env.APP_ROOT, 'public')
-  : RENDERER_DIST;
+logger.info(process.env['VITE_DEV_SERVER_URL']);
+logger.info(process.env['APP_ROOT']);
+
+process.env['VITE_PUBLIC'] = VITE_DEV_SERVER_URL
+  ? path.join(process.env['APP_ROOT'], 'apps/frontend-electron/public')
+  : path.join(RENDERER_DIST, 'public');
+
+if (!process.env['VITE_PUBLIC']) {
+  throw new Error('VITE_PUBLIC environment variable is not set');
+}
 
 let win: BrowserWindow | null;
 
@@ -34,10 +41,8 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env['VITE_PUBLIC'] ?? '', 'electron-vite.svg'),
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
       preload: join(__dirname, 'preload.js'),
       sandbox: false,
     },
@@ -52,8 +57,8 @@ function createWindow() {
   });
 
   // In development, use the host url
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL(VITE_DEV_SERVER_URL ?? 'http://localhost:4200');
+  if (VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(VITE_DEV_SERVER_URL);
     mainWindow.webContents.openDevTools();
   } else {
     // In production, load from dist
@@ -91,6 +96,7 @@ app.on('activate', () => {
 });
 
 app.whenReady().then(() => {
+
   win = createWindow();
 
   app.on('activate', function () {
@@ -100,4 +106,21 @@ app.whenReady().then(() => {
       win = createWindow();
     }
   });
+});
+
+app.on('browser-window-focus', function () {
+  if(!process.env['VITE_DEV_SERVER_URL']){
+    globalShortcut.register("CommandOrControl+R", () => {
+        console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+    });
+    globalShortcut.register("F5", () => {
+        console.log("F5 is pressed: Shortcut Disabled");
+    });
+  }
+});
+app.on('browser-window-blur', function () {
+  if(!process.env['VITE_DEV_SERVER_URL']){
+    globalShortcut.unregister('CommandOrControl+R');
+    globalShortcut.unregister('F5');
+  }
 });

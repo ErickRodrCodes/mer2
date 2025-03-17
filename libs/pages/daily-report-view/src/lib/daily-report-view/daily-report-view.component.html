@@ -1,0 +1,79 @@
+<div class="container mx-auto">
+  <div class="text-center">
+    <h2>
+      Daily Report for {{ humanDate() }}. Technician Name: {{ techName() }}
+    </h2>
+  </div>
+  <fieldset class="fieldset">
+    <legend class="fieldset-legend">Select Date</legend>
+    <input type="date" class="input" (change)="onDateChange($event)" />
+  </fieldset>
+  <table class="table table-xs mt-5">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Patient Name</th>
+        <th>DOB</th>
+        <th>Document #</th>
+        <th>Facility</th>
+        <th>Exam</th>
+        <th>Referring Physician</th>
+        <th>A/C#</th>
+        <th>Fax #</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (form of forms();  track form.PK_Intake) {
+      <tr>
+        <td class="text-base">{{ $index + 1 }}</td>
+        <td class="text-base">{{ form.patientName }}</td>
+        <td class="text-base">{{ form.dob === '' ? 'N/A' : format(form.dob, 'MM-dd-yyyy') }}</td>
+        <td class="text-base">{{ form.dcNumber }}</td>
+        <td class="text-base">{{ form.facility }}</td>
+        <td class="text-base">{{ form.exam }}</td>
+        <td class="text-base">{{ form.referringPhysician }}</td>
+        <td class="text-base">{{ form.acNumber }}</td>
+        <td class="text-base">{{ form.faxNumber || 'N/A' }}</td>
+        <td class="flex gap-2">
+          <div class="tooltip" data-tip="Print">
+          <button class="btn btn-info btn-ghost btn-xs" (click)="billingSheetPrint(form.PK_Intake)">
+            <i class="fa-solid fa-print"></i>
+          </button>
+        </div>
+        <div class="tooltip" data-tip="Edit">
+          <button class="btn btn-info btn-ghost btn-xs" (click)="editSurvey(form.PK_Intake)">
+            <i class="fa-solid fa-pencil "></i>
+          </button>
+        </div>
+
+        </td>
+      </tr>
+      }
+      @empty {
+      <tr>
+        <td colspan="10">
+          <div class="!text-center p-2 bg-info text-black text-lg">
+            No tests found for the selected day.
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <div class="mt-5 flex">
+    <button
+      *ngIf="forms().length > 0"
+      class="btn btn-primary mx-auto"
+      (click)="printDailyReport()"
+    >
+      Print Report
+    </button>
+    <a
+      routerLink="/dashboard"
+      class="btn btn-primary mx-auto"
+    >
+      Return to Dashboard
+    </a>
+  </div>
+</div>

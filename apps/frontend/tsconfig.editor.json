@@ -1,6 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "../frontend-electron/src/types/window/index.d.ts"
+  ],
   "compilerOptions": {},
   "exclude": [
     "jest.config.ts",

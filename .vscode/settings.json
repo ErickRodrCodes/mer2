@@ -1,3 +1,29 @@
 {
-  "terminal.integrated.automationProfile.linux": {}
+  "terminal.integrated.automationProfile.linux": {},
+  "chat.agent.enabled": true,
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": "./.vscode/daisyui.md"
+    },
+    {
+      "file": "./.vscode/codegenInstructions.md"
+    }
+  ],
+  "mcp": {
+    "servers": {
+      "Context7": {
+        "type": "stdio",
+        "command": "pnpm exec",
+        "args": ["-y", "@upstash/context7-mcp@latest"]
+      }
+    }
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports.ts": "always",
+    "source.organizeImports.ts": "always",
+    "source.fixAll.eslint": "always"
+  },
+  "vitest.disableWorkspaceWarning": true,
+  "nxConsole.generateAiAgentRules": true
 }

@@ -1,0 +1,16 @@
+{
+  "name": "@mer-ui/ui-input-text-field",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/core": "^19.2.0",
+    "@angular/forms": "~19.2.0",
+    "@spartan-ng/brain": "0.0.1-alpha.434",
+    "@spartan-ng/ui-formfield-helm": "0.0.1",
+    "@spartan-ng/ui-input-helm": "0.0.1",
+    "vite": "^6.0.0",
+    "@analogjs/vite-plugin-angular": "~1.10.0",
+    "@nx/vite": "20.6.0",
+    "rxjs": "~7.8.0"
+  },
+  "sideEffects": false
+}

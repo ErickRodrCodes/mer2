@@ -27,7 +27,7 @@ export const ACNumber = InputTextFields.TEXT({
   name: 'acNumber',
   label: 'A/C #',
   type: 'text',
-  readonly: true,
+  readonly: false,
   forceUpperCase: true,
   validationRules: {
     required: {

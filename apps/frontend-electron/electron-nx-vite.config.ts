@@ -195,7 +195,6 @@ export async function electronNxViteConfig() {
           sourcemap: 'inline',
           rollupOptions: {
             external: dependencies,
-
             output: {
               entryFileNames: '[name].js',
               chunkFileNames: '[name].js',

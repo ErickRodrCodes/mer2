@@ -1,0 +1,29 @@
+{
+  "name": "mer-services",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/services/mer-services/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/services/mer-services/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/services/mer-services/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/services/mer-services/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

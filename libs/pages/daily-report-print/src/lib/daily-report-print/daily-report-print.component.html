@@ -1,0 +1,46 @@
+
+  <div class="text-center">
+    <h2>
+      Daily Report for {{ humanDate() }}. Technician Name: {{ techName() }}
+    </h2>
+  </div>
+
+  <table class="table table-xs mt-5 ">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Patient Name</th>
+        <th>DOB</th>
+        <th>Document #</th>
+        <th>Facility</th>
+        <th>Exam</th>
+        <th>Referring Physician</th>
+        <th>A/C#</th>
+        <th>Fax #</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (form of forms(); track form.PK_Intake) {
+      <tr>
+        <td class="text-base ">{{ $index + 1 }}</td>
+        <td class="text-base whitespace-nowrap">{{ form.patientName }}</td>
+        <td class="text-base whitespace-nowrap">{{ form.dob === '' ? 'N/A' : format(form.dob, 'MM-dd-yyyy') }}</td>
+        <td class="text-base">{{ form.dcNumber }}</td>
+        <td class="text-base whitespace-nowrap">{{ form.facility }}</td>
+        <td class="text-base">{{ form.exam }}</td>
+        <td class="text-base whitespace-nowrap">{{ form.referringPhysician }}</td>
+        <td class="text-base whitespace-nowrap">{{ form.acNumber }}</td>
+        <td class="text-base whitespace-nowrap">{{ form.faxNumber || 'N/A' }}</td>
+      </tr>
+    }
+    @empty {
+      <tr>
+        <td colspan="9">
+          <div class="!text-center p-2 bg-info text-black text-lg">
+            No tests found for the selected day.
+          </div>
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>

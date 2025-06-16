@@ -1,0 +1,118 @@
+<dialog
+  id="CptCodeSelect"
+  class="modal"
+  (onClose)="closeModal()"
+  #dialog
+>
+  <div class="modal-box w-11/12 max-w-5xl">
+    <button
+      class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+      (click)="closeModal()"
+    >
+      ✕
+    </button>
+
+    <h3 class="font-bold text-lg">Add CPT Code to Report</h3>
+    <div class="grid grid-cols-2 gap-2 my-2">
+      <div class="col-span-1">
+        <div class="join w-full">
+          <label class="join-item btn btn-sm btn-primary" for="search">Filter</label>
+          <input
+        type="text"
+        placeholder="Type here to Search by CPT Code or keyword"
+        class="input input-primary input-sm join-item w-full"
+        name="search"
+        #searchRef
+        [value]="searchTerm()"
+        (input)="handleSearchChange($event)"
+      />
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-3">
+      <div class="h-80 overflow-x-auto">
+        <div class="grid grid-cols-2 gap-2 h-full">
+
+          <fieldset class="fieldset h-full w-full overflow-auto bg-base-200" [class.relative]="filteredCptCodes().length === 0">
+            <legend class="fieldset-legend">Available CPT Codes</legend>
+            <ul class="list gap-1" >
+
+              @for (filteredCptCode of filteredCptCodes(); track filteredCptCode.PK_cptcode) {
+
+              <li class="flex flex-row w-full rounded-md p-1 hover:bg-primary">
+
+                <div class="grow">
+                  <div class="font-bold ">{{filteredCptCode.PK_cptcode}}</div>
+                  <div class="text-xs uppercase font-semibold opacity-60">{{filteredCptCode.description}}</div>
+                </div>
+                <div class="tooltip tooltip-left" data-tip="Add to Selected CPT codes">
+                <button class="btn btn-square btn-ghost" (click)="onSelectedCptCode(filteredCptCode)">
+                  <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <g stroke-linejoin="round" stroke-linecap="round"  fill="currentColor"><path d="M0 5h1v6h-1zM2 5h1v6h-1zM4 5h1v6h-1zM16 8l-7-7v4h-3v6h3v4z"></path>
+                    </g></svg>
+
+                </button>
+                </div>
+
+              </li>
+              }
+              @empty {
+                <li class="list-row py-1 absolute inset-0">
+                  <div class="list-col-grow flex flex-row items-center justify-center gap-2">
+                    <svg class="size-[1.2em] text-warning" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 33 33" fill="currentColor" >
+                      <path d="M16 3c-3.472 0-6.737 1.352-9.192 3.808s-3.808 5.72-3.808 9.192c0 3.472 1.352 6.737 3.808 9.192s5.72 3.808 9.192 3.808c3.472 0 6.737-1.352 9.192-3.808s3.808-5.72 3.808-9.192c0-3.472-1.352-6.737-3.808-9.192s-5.72-3.808-9.192-3.808zM16 0v0c8.837 0 16 7.163 16 16s-7.163 16-16 16c-8.837 0-16-7.163-16-16s7.163-16 16-16zM14 22h4v4h-4zM14 6h4v12h-4z"></path>
+                    </svg>
+                    <div class="text-sm text-warning">No results found for "{{searchTerm()}}"</div>
+                  </div>
+                </li>
+              }
+
+            </ul>
+          </fieldset>
+
+          <fieldset class="fieldset h-full w-full overflow-auto bg-info-content" [class.relative]="_selectedCptCodes().length === 0">
+            <legend class="fieldset-legend">Selected CPT Codes </legend>
+            <ul class="list gap-1" >
+
+              @for (selectedCptCode of _selectedCptCodes(); track selectedCptCode.PK_cptcode) {
+
+              <li class="flex flex-row w-full rounded-md p-1 hover:bg-primary gap-2">
+
+
+                <div class="tooltip tooltip-right" data-tip="Remove">
+                <button class="btn btn-square btn-ghost" (click)="onRemoveCptCode(selectedCptCode)">
+                  <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"></path>
+                    </svg>
+                </button>
+                </div>
+                <div class="grow">
+                  <div class="font-bold ">{{selectedCptCode.PK_cptcode}}</div>
+                  <div class="text-xs uppercase font-semibold opacity-60">{{selectedCptCode.description}}</div>
+                </div>
+
+              </li>
+              }
+              @empty {
+                <li class="list-row py-1 absolute inset-0">
+                  <div class="list-col-grow flex flex-row items-center justify-center gap-2">
+                    <svg class="size-[1.2em] text-warning" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 33 33" fill="currentColor" >
+                      <path d="M16 3c-3.472 0-6.737 1.352-9.192 3.808s-3.808 5.72-3.808 9.192c0 3.472 1.352 6.737 3.808 9.192s5.72 3.808 9.192 3.808c3.472 0 6.737-1.352 9.192-3.808s3.808-5.72 3.808-9.192c0-3.472-1.352-6.737-3.808-9.192s-5.72-3.808-9.192-3.808zM16 0v0c8.837 0 16 7.163 16 16s-7.163 16-16 16c-8.837 0-16-7.163-16-16s7.163-16 16-16zM14 22h4v4h-4zM14 6h4v12h-4z"></path>
+                    </svg>
+                    <div class="text-sm text-warning">No selected CPT codes!</div>
+                  </div>
+                </li>
+              }
+
+            </ul>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div class="modal-action">
+      <button class="btn btn-sm btn-error" (click)="closeModal()">
+        Close Dialog
+      </button>
+    </div>
+  </div>
+</dialog>

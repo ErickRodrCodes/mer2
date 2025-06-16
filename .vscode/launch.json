@@ -1,0 +1,43 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Electron Main - frontend-electron",
+      "type": "node",
+      "request": "attach",
+      "port": 5858,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"],
+      "presentation": {
+        "hidden": true,
+        "group": "",
+        "order": 1
+      }
+    },
+    {
+      "name": "Attach to Electron Renderer - frontend-electron",
+      "type": "pwa-chrome",
+      "request": "attach",
+      "port": 4975,
+      "webRoot": "${workspaceFolder}",
+      "presentation": {
+        "hidden": true,
+        "group": "",
+        "order": 1
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Electron App - frontend-electron",
+      "configurations": [
+        "Attach to Electron Main - frontend-electron",
+        "Attach to Electron Renderer - frontend-electron"
+      ],
+      "preLaunchTask": "pnpm: serve-frontend-electron"
+    }
+  ]
+}

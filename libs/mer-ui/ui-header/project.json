@@ -1,0 +1,29 @@
+{
+  "name": "@mer-ui/ui-header",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/mer-ui/ui-header/src",
+  "prefix": "mer",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/mer-ui/ui-header/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/mer-ui/ui-header/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/mer-ui/ui-header/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

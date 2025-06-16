@@ -1,0 +1,15 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Your rule content
+
+- We are running on windows 11
+- we use likely powershell for command lines
+- when requested about documentation, please ask if the documentation requested is on the codebase or not.
+- if documentation can't be found, request the url of the documentation to use.
+
+# Active documentation for this project
+- better-sqlite3: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md

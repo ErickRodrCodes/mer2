@@ -5,7 +5,10 @@
     "types": []
   },
   "files": ["src/main.ts"],
-  "include": ["src/**/*.d.ts"],
+  "include": [
+    "src/**/*.d.ts",
+    "../frontend-electron/src/types/window/index.d.ts"
+  ],
   "exclude": [
     "jest.config.ts",
     "src/**/*.test.ts",

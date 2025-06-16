@@ -1,0 +1,14 @@
+{
+  "name": "@mer-ui/ui-header",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^19.2.0",
+    "@angular/core": "^19.2.0",
+    "@mer/services": "0.0.1",
+    "@mer/types": "0.0.1",
+    "vite": "^6.0.0",
+    "@analogjs/vite-plugin-angular": "~1.10.0",
+    "@nx/vite": "20.6.0"
+  },
+  "sideEffects": false
+}

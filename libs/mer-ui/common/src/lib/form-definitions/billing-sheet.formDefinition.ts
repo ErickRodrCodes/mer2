@@ -81,7 +81,7 @@ export const amountToBePaid = InputTextFields.NUMBER({
   label: 'Amount to be paid',
   validationRules: {
     required: {
-      value: true,
+      value: false,
       message: '⚠️ Amount is required',
     },
     min: {

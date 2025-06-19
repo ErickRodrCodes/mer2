@@ -186,7 +186,7 @@ export class MerUiRadioGroupComponent implements OnInit {
     }
   }
 
-  public onChangeEvent($event: Event): void {
+  public onClickEvent($event: Event): void {
     // For radio group, set value from event target
     const value = ($event.target as HTMLInputElement).value;
     this.inputControl.setValue(value);

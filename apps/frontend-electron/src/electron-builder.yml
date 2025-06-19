@@ -21,7 +21,7 @@ win:
   # certificatePassword: ""
 nsis:
   installerIcon: dist/apps/frontend-electron-icons/setup.ico
-  artifactName: MUS-ELR-2.0.0-setup.${ext}
+  artifactName: MUS-ELR-2.0.1-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
@@ -36,7 +36,7 @@ mac:
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
 dmg:
-  artifactName: MUS-ELR-2.0.0.${ext}
+  artifactName: MUS-ELR-2.0.1.${ext}
 linux:
   icon: dist/apps/frontend-electron-icons/icon.ico
   target:

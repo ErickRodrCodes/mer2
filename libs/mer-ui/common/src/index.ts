@@ -16,3 +16,7 @@ export class ProtectedRouteConstants {
   public static readonly PREVIEW_BILLING_SHEET = '/preview-billing-sheet/:billing_sheet_id';
 }
 
+// Export billing sheet form definitions
+export * from './lib/form-definitions/billing-sheet.formDefinition';
+export * from './lib/form-definitions/billing-sheet.helpers';
+

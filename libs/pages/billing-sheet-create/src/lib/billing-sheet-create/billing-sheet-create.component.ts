@@ -196,10 +196,11 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
     const code = this.sessionService.userSessionData().technicianCode;
     const getConsecutiveNumber =
       await window.MedicalRecordAPI.intakeFormObtainNewPK(code);
+    const PK_IntakeValue = await window.MedicalRecordAPI.intakeFormObtainNewPK_Intake();
     this.newConsecutiveNumber.set(getConsecutiveNumber);
     this.form.patchValue({
       acNumber: getConsecutiveNumber,
-      PK_Intake: getConsecutiveNumber,
+      PK_Intake: PK_IntakeValue,
       sonographer: `${this.sessionService.userSessionData().technicianFirstName} ${this.sessionService.userSessionData().technicianLastName}`,
       dateOfService: new Date().toISOString().split('T')[0],
     },{

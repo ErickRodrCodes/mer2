@@ -50,7 +50,7 @@ export class MerPagesDailyReportPrintComponent implements OnInit {
       this.techName.set(`${technicianName.technicianFirstName} ${technicianName.technicianLastName}`);
 
       const {listIntakes} = await window.MedicalRecordAPI.getListsOfIntakesOfDay({
-        technicianId: this.technicianId(),
+        technicianId: this.techName(),
         date: this.formatDateForRequest()
       });
 
@@ -86,7 +86,6 @@ export class MerPagesDailyReportPrintComponent implements OnInit {
         techCode: user.technicianCode || '',
         date: this.formatDateForRequest(),
       });
-      console.log({ response });
     } catch (error) {
       console.error('Error printing report:', error);
     }

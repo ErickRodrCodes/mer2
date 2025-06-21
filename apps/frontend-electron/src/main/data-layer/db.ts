@@ -18,6 +18,7 @@ import { logger } from '../logger';
 import { dbConnector } from '../native/better-sqlite3';
 import { contentCptCodeOptions } from './setup-cpt-codes';
 
+
 export class DB {
   private db: Database;
 
@@ -551,20 +552,23 @@ export class DB {
     technicianId: string;
     date: string;
   }) {
+    logger.log(this.getRightTodayDate());
     const { technicianId, date } = params;
+    const sonographer = technicianId.toUpperCase();
     // Get intakes for technician and date
     const intakesQuery = `
       SELECT * FROM intake_forms
-      WHERE PK_Intake LIKE @pattern AND dateOfService = @date
+      WHERE sonographer = @sonographer AND dateOfService = @date
     `;
+
     // this.db.open()
     const intakesStatement = this.db.prepare<
-      { pattern: string; date: string },
+      { sonographer: string; date: string },
       IntakeFormSchema
     >(intakesQuery);
 
     const intakes = intakesStatement.all({
-      pattern: `${technicianId}_%`,
+      sonographer,
       date,
     });
 
@@ -601,7 +605,7 @@ export class DB {
 
       // Format the date
       const formattedDob = patientDOB
-        ? this.formatDate(new Date(patientDOB), 'MM-dd-yyyy')
+        ? patientDOB
         : '';
 
       return {
@@ -646,6 +650,10 @@ export class DB {
       .replace('MM', month)
       .replace('dd', day)
       .replace('yyyy', year.toString());
+  }
+
+  public intakeFormObtainNewPK_Intake(): string {
+    return crypto.randomUUID();
   }
 
   /**
@@ -883,5 +891,11 @@ export class DB {
       console.error('Error updating intake form:', error);
       return false;
     }
+  }
+
+  public getRightTodayDate() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today.getTime();
   }
 }

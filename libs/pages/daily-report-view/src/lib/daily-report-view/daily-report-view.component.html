@@ -28,7 +28,7 @@
       <tr>
         <td class="text-base">{{ $index + 1 }}</td>
         <td class="text-base">{{ form.patientName }}</td>
-        <td class="text-base">{{ form.dob === '' ? 'N/A' : format(form.dob, 'MM-dd-yyyy') }}</td>
+        <td class="text-base">{{ form.dob === '' ? 'N/A' : form.dob }}</td>
         <td class="text-base">{{ form.dcNumber }}</td>
         <td class="text-base">{{ form.facility }}</td>
         <td class="text-base">{{ form.exam }}</td>

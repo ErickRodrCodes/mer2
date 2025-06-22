@@ -49,63 +49,24 @@
       "@mer/electron-api": ["electron-api-types/src/index.ts"],
       "@mer/services": ["libs/services/mer-services/src/index.ts"],
       "@mer/types": ["libs/types/src/index.ts"],
-      "@spartan-ng/ui-accordion-helm": [
-        "libs/spartan-ui/ui-accordion-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-alert-helm": [
-        "libs/spartan-ui/ui-alert-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-alertdialog-helm": [
-        "libs/spartan-ui/ui-alertdialog-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-breadcrumb-helm": [
         "libs/spartan-ui/ui-breadcrumb-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-button-helm": [
-        "libs/spartan-ui/ui-button-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-calendar-helm": [
-        "libs/spartan-ui/ui-calendar-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-carousel-helm": [
-        "libs/spartan-ui/ui-carousel-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-checkbox-helm": [
-        "libs/spartan-ui/ui-checkbox-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-command-helm": [
-        "libs/spartan-ui/ui-command-helm/src/index.ts"
       ],
       "@spartan-ng/ui-datepicker-helm": [
         "libs/spartan-ui/ui-datepicker-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-dialog-helm": [
-        "libs/spartan-ui/ui-dialog-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-formfield-helm": [
         "libs/spartan-ui/ui-formfield-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-icon-helm": ["libs/spartan-ui/ui-icon-helm/src/index.ts"],
       "@spartan-ng/ui-input-helm": [
         "libs/spartan-ui/ui-input-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-menu-helm": ["libs/spartan-ui/ui-menu-helm/src/index.ts"],
       "@spartan-ng/ui-pagination-helm": [
         "libs/spartan-ui/ui-pagination-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-popover-helm": [
-        "libs/spartan-ui/ui-popover-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-radiogroup-helm": [
         "libs/spartan-ui/ui-radiogroup-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-select-helm": [
-        "libs/spartan-ui/ui-select-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-sheet-helm": [
-        "libs/spartan-ui/ui-sheet-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-tabs-helm": ["libs/spartan-ui/ui-tabs-helm/src/index.ts"]
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

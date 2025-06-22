@@ -20,15 +20,6 @@ import {
 } from './registration.formDefinition';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  BrnDialogContentDirective
-} from '@spartan-ng/brain/dialog';
-import {
-  HlmDialogComponent,
-  HlmDialogContentComponent,
-  HlmDialogFooterComponent,
-  HlmDialogHeaderComponent
-} from '@spartan-ng/ui-dialog-helm';
 
 @Component({
   imports: [
@@ -36,13 +27,8 @@ import {
     MerUIInputTextFieldComponent,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule,
-    HlmDialogComponent,
-    HlmDialogContentComponent,
-    HlmDialogFooterComponent,
-    HlmDialogHeaderComponent,
-    BrnDialogContentDirective,
-  ],
+    RouterModule
+],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.css',
 })

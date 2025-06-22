@@ -1,7 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { hlm } from '@spartan-ng/brain/core';
 import { BrnRadioGroupDirective } from '@spartan-ng/brain/radio-group';
-import { SpartanUIRadioGroupClassConfig } from '@spartan-ui/config-adapter';
 import type { ClassValue } from 'clsx';
 
 @Component({
@@ -20,5 +19,5 @@ import type { ClassValue } from 'clsx';
 })
 export class HlmRadioGroupComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected _computedClass = computed(() => hlm(SpartanUIRadioGroupClassConfig.HlmRadioGroupComponentComputedClass, this.userClass()));
+	protected _computedClass = computed(() => hlm('grid gap-2', this.userClass()));
 }

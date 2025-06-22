@@ -1,19 +1,18 @@
 import {
-    Directive,
-    type DoCheck,
-    Injector,
-    computed,
-    effect,
-    inject,
-    input,
-    signal,
-    untracked,
+  Directive,
+  type DoCheck,
+  Injector,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { hlm } from '@spartan-ng/brain/core';
 import { BrnFormFieldControl } from '@spartan-ng/brain/form-field';
 import { ErrorStateMatcher, ErrorStateTracker } from '@spartan-ng/brain/forms';
-import { SpartanUIInputClassConfig } from '@spartan-ui/config-adapter';
 
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ClassValue } from 'clsx';
@@ -32,7 +31,7 @@ export const inputVariants = cva(
         // auto: '[&.ng-invalid.ng-touched]:text-destructive [&.ng-invalid.ng-touched]:border-destructive [&.ng-invalid.ng-touched]:focus-visible:ring-destructive',
         // true: 'text-destructive border-destructive focus-visible:ring-destructive ',
         auto: '',
-        true: SpartanUIInputClassConfig.HlmInputDirectiveInputVariantErrorClasses,
+        true: '[&.ng-invalid.ng-touched]:input-error [&.ng-invalid.ng-touched]:text-error',
       },
     },
     defaultVariants: {

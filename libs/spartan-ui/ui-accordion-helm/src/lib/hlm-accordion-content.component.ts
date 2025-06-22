@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-input-rename */
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,9 +7,8 @@ import {
   input,
 } from '@angular/core';
 import { BrnAccordionContentComponent } from '@spartan-ng/brain/accordion';
-imp;
+
 import { hlm } from '@spartan-ng/brain/core';
-import { AccordionConfigBase } from '@spartan-ui/config-adapter';
 import type { ClassValue } from 'clsx';
 
 @Component({
@@ -32,11 +32,7 @@ export class HlmAccordionContentComponent extends BrnAccordionContentComponent {
   protected readonly _computedClass = computed(() => {
     const gridRows =
       this.state() === 'open' ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]';
-    return hlm(
-      AccordionConfigBase.AccordionContentComponent,
-      gridRows,
-      this.userClass()
-    );
+    return hlm('text-sm transition-all grid', gridRows, this.userClass());
   });
 
   constructor() {

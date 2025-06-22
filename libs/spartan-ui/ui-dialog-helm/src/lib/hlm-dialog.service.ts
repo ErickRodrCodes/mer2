@@ -6,7 +6,6 @@ import {
   DEFAULT_BRN_DIALOG_OPTIONS,
   cssClassesToArray,
 } from '@spartan-ng/brain/dialog';
-import { SpartanUIDialogConfig } from '@spartan-ui/config-adapter';
 import { HlmDialogContentComponent } from './hlm-dialog-content.component';
 
 export type HlmDialogOptions<DialogContext extends Record<string, unknown> = Record<string, unknown>> =
@@ -28,7 +27,7 @@ export class HlmDialogService {
 
 			...(options ?? {}),
 			backdropClass: cssClassesToArray(
-			  `${SpartanUIDialogConfig.HlmDialogOverlayDirective_ComputedClass} ${options?.backdropClass ?? ''}`
+			  `bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 ${options?.backdropClass ?? ''}`
 			),
 			context: {
 			  ...contextObj,

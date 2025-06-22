@@ -1,6 +1,5 @@
 import { Component, computed, input } from '@angular/core';
 import { hlm } from '@spartan-ng/brain/core';
-import { SpartanUIDialogConfig } from '@spartan-ui/config-adapter';
 import type { ClassValue } from 'clsx';
 
 @Component({
@@ -17,7 +16,7 @@ export class HlmDialogFooterComponent {
 	public readonly userClass = input<ClassValue>('', { alias: 'class' });
 	protected _computedClass = computed(() =>
 		hlm(
-      SpartanUIDialogConfig.HlmDialogFooterComponent_ComputedClass,
+      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
       this.userClass()
     )
 	);

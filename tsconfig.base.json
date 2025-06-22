@@ -160,9 +160,6 @@
       ],
       "@spartan-ng/ui-typography-helm": [
         "libs/spartan-ui/ui-typography-helm/src/index.ts"
-      ],
-      "@spartan-ui/config-adapter": [
-        "libs/spartan-ui/config-adapter/src/index.ts"
       ]
     }
   },

@@ -27,6 +27,7 @@ export class CptSelectDialogComponent implements OnInit {
   public readonly cptCodes = signal<CPTCode[]>([]);
 
   public readonly openCptSelectDialog = input.required<boolean>();
+  public readonly initialSelectedCptCodes = input<CPTCode[]>([]);
   public readonly selectedCptCodes = output<CPTCode[]>();
   public readonly closed = output<void>();
 
@@ -38,16 +39,11 @@ export class CptSelectDialogComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.openCptSelectDialog()) {
+        this._selectedCptCodes.set([...this.initialSelectedCptCodes()]);
         this.openModal();
         setTimeout(() => {
           this.searchRef().nativeElement.focus();
         }, 100);
-      }
-    });
-
-    effect(() => {
-      if (this.openCptSelectDialog()) {
-        this.selectedCptCodes.emit(this._selectedCptCodes());
       }
     });
 
@@ -117,6 +113,12 @@ export class CptSelectDialogComponent implements OnInit {
     this.selectedCptCodes.emit(this._selectedCptCodes());
     this.closed.emit();
   }
+
+  public onEscCloseModal() {
+    this.dialog().nativeElement.close();
+    this.closed.emit();
+  }
+
 
   public openModal() {
     this.dialog().nativeElement.showModal();

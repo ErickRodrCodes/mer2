@@ -2,14 +2,6 @@
   "mcpServers": {
     "nx-mcp": {
       "url": "http://localhost:9945/sse"
-    },
-    "Context7": {
-      "type": "stdio",
-      "command": "pnpm exec",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ]
     }
   }
 }

@@ -204,6 +204,7 @@
   <!-- TODO: Implement CptCodeSelect dialog -->
   <mer-cpt-select-dialog
     [openCptSelectDialog]="openCptDialog()"
+    [initialSelectedCptCodes]="selectedCptCodes()"
     (selectedCptCodes)="handleCptCodesChange($event)"
     (closed)="openCptDialog.set(false)"
   />

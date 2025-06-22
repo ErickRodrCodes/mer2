@@ -24,9 +24,6 @@
       "@mer-pages/billing-sheet-print": [
         "libs/pages/billing-sheet-print/src/index.ts"
       ],
-      "@mer-pages/daily-report-list": [
-        "libs/pages/daily-report-list/src/index.ts"
-      ],
       "@mer-pages/daily-report-print": [
         "libs/pages/daily-report-print/src/index.ts"
       ],
@@ -61,15 +58,6 @@
       "@spartan-ng/ui-alertdialog-helm": [
         "libs/spartan-ui/ui-alertdialog-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-aspectratio-helm": [
-        "libs/spartan-ui/ui-aspectratio-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-avatar-helm": [
-        "libs/spartan-ui/ui-avatar-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-badge-helm": [
-        "libs/spartan-ui/ui-badge-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-breadcrumb-helm": [
         "libs/spartan-ui/ui-breadcrumb-helm/src/index.ts"
       ],
@@ -79,7 +67,6 @@
       "@spartan-ng/ui-calendar-helm": [
         "libs/spartan-ui/ui-calendar-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-card-helm": ["libs/spartan-ui/ui-card-helm/src/index.ts"],
       "@spartan-ng/ui-carousel-helm": [
         "libs/spartan-ui/ui-carousel-helm/src/index.ts"
       ],
@@ -98,15 +85,9 @@
       "@spartan-ng/ui-formfield-helm": [
         "libs/spartan-ui/ui-formfield-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-hovercard-helm": [
-        "libs/spartan-ui/ui-hovercard-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-icon-helm": ["libs/spartan-ui/ui-icon-helm/src/index.ts"],
       "@spartan-ng/ui-input-helm": [
         "libs/spartan-ui/ui-input-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-label-helm": [
-        "libs/spartan-ui/ui-label-helm/src/index.ts"
       ],
       "@spartan-ng/ui-menu-helm": ["libs/spartan-ui/ui-menu-helm/src/index.ts"],
       "@spartan-ng/ui-pagination-helm": [
@@ -115,52 +96,16 @@
       "@spartan-ng/ui-popover-helm": [
         "libs/spartan-ui/ui-popover-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-progress-helm": [
-        "libs/spartan-ui/ui-progress-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-radiogroup-helm": [
         "libs/spartan-ui/ui-radiogroup-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-scrollarea-helm": [
-        "libs/spartan-ui/ui-scrollarea-helm/src/index.ts"
       ],
       "@spartan-ng/ui-select-helm": [
         "libs/spartan-ui/ui-select-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-separator-helm": [
-        "libs/spartan-ui/ui-separator-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-sheet-helm": [
         "libs/spartan-ui/ui-sheet-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-skeleton-helm": [
-        "libs/spartan-ui/ui-skeleton-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-slider-helm": [
-        "libs/spartan-ui/ui-slider-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-sonner-helm": [
-        "libs/spartan-ui/ui-sonner-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-spinner-helm": [
-        "libs/spartan-ui/ui-spinner-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-switch-helm": [
-        "libs/spartan-ui/ui-switch-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-table-helm": [
-        "libs/spartan-ui/ui-table-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-tabs-helm": ["libs/spartan-ui/ui-tabs-helm/src/index.ts"],
-      "@spartan-ng/ui-toggle-helm": [
-        "libs/spartan-ui/ui-toggle-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-tooltip-helm": [
-        "libs/spartan-ui/ui-tooltip-helm/src/index.ts"
-      ],
-      "@spartan-ng/ui-typography-helm": [
-        "libs/spartan-ui/ui-typography-helm/src/index.ts"
-      ]
+      "@spartan-ng/ui-tabs-helm": ["libs/spartan-ui/ui-tabs-helm/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

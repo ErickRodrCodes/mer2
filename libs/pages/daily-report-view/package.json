@@ -12,6 +12,5 @@
     "date-fns": "^4.1.0",
     "@mer-ui/common": "0.0.1",
     "@mer/services": "0.0.1"
-  },
-  "sideEffects": false
+  }
 }

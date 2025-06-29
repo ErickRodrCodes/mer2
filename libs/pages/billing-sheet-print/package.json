@@ -15,6 +15,5 @@
     "@spartan-ng/ui-radiogroup-helm": "0.0.1",
     "@mer/types": "0.0.1",
     "@mer-ui/common": "0.0.1"
-  },
-  "sideEffects": false
+  }
 }

@@ -18,6 +18,5 @@
     "@mer/electron-api": "0.0.1",
     "@mer-ui/form/cpt-select-dialog": "0.0.1",
     "@mer/types": "0.0.1"
-  },
-  "sideEffects": false
+  }
 }

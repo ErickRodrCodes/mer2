@@ -14,6 +14,5 @@
     "@mer/services": "0.0.1",
     "@mer/electron-api": "0.0.1",
     "@mer/types": "0.0.1"
-  },
-  "sideEffects": false
+  }
 }

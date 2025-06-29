@@ -13,6 +13,5 @@
     "@nx/vite": "20.6.0",
     "@angular/common": "~19.2.0",
     "rxjs": "~7.8.0"
-  },
-  "sideEffects": false
+  }
 }

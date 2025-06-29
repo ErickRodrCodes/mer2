@@ -7,6 +7,5 @@
     "@nx/vite": "20.6.0",
     "@mer-ui/ui-input-text-field": "0.0.1",
     "@mer-ui/ui-radio-group": "0.0.1"
-  },
-  "sideEffects": false
+  }
 }

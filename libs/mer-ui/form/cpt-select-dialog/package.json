@@ -10,6 +10,5 @@
     "@mer/electron-api": "0.0.1",
     "@angular/common": "~19.2.0",
     "@mer/types": "0.0.1"
-  },
-  "sideEffects": false
+  }
 }

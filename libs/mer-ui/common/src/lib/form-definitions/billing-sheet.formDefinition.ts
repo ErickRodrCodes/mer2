@@ -32,7 +32,7 @@ export const ACNumber = InputTextFields.TEXT({
   forceUpperCase: true,
   validationRules: {
     required: {
-      value: false,
+      value: true,
       message: '⚠️ Account number is required',
     },
   },

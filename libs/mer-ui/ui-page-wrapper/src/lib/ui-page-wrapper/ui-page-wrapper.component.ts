@@ -9,19 +9,28 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterOutlet,
+} from '@angular/router';
 import { MenuItemRoute } from '@mer/types';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { MerUIHeaderComponent } from '@mer-ui/ui-header';
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'mer-ui-page-wrapper',
   imports: [RouterOutlet, RouterLink, MerUIHeaderComponent],
+  standalone: true,
   templateUrl: './ui-page-wrapper.component.html',
   styleUrl: './ui-page-wrapper.component.scss',
 })
 export class MerUIPageWrapperComponent implements OnInit {
-  public readonly drawerToggle = viewChild.required<HTMLInputElement>('drawerToggle');
+  public readonly drawerToggle =
+    viewChild.required<HTMLInputElement>('drawerToggle');
   public activeRoute = inject(ActivatedRoute);
   public renderer = inject(Renderer2);
   public items: InputSignal<MenuItemRoute[]> =
@@ -46,5 +55,4 @@ export class MerUIPageWrapperComponent implements OnInit {
         this.disableHeaderAndTheme.set(isPrint);
       });
   }
-
 }

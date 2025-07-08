@@ -1,38 +1,72 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { format, parseISO } from 'date-fns';
 
 import { ProtectedRouteConstants } from '@mer-ui/common';
-import { SessionService } from '@mer/services';
-
+import { IpcMainService, SessionService } from '@mer/services';
 
 @Component({
   selector: 'lib-mer-pages-daily-report-view',
   standalone: true,
   imports: [CommonModule, RouterModule],
+  providers: [IpcMainService],
   templateUrl: './daily-report-view.component.html',
   styleUrl: './daily-report-view.component.css',
 })
 export class MerPagesDailyReportViewComponent implements OnInit {
   private readonly sessionService = inject(SessionService);
   private readonly router = inject(Router);
-  public readonly routes = ProtectedRouteConstants
+  public readonly routes = ProtectedRouteConstants;
 
-  private readonly currentDate = new Date();
-  private formatDateForRequest = signal(this.currentDate.toISOString().split('T')[0]);
-  public readonly humanDate = signal(this.currentDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+  private currentDate: Date = new Date();
+  private formatDateForRequest = signal(
+    this.currentDate.toISOString().split('T')[0]
+  );
+  public readonly humanDate = signal('');
   public readonly techName = signal('');
-  forms: WritableSignal<any[]> = signal([]);
+  public readonly forms: WritableSignal<any[]> = signal([]);
+
+  public ipcMainService = inject(IpcMainService);
 
   constructor() {
+    this.initializeDate();
+
     effect(() => {
       if (this.formatDateForRequest()) {
-        const isoDate = new Date(this.formatDateForRequest()).toISOString().split('T')[0];
-        const humanDate = new Date(this.formatDateForRequest()).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        this.formatDateForRequest.set(isoDate);
-        this.humanDate.set(humanDate);
+        console.log({
+          currentDate: this.formatDateForRequest(),
+          formatDateForRequest: new Date(
+            this.formatDateForRequest()
+          ).toISOString(),
+        });
+
+        this.humanDate.set(
+          new Date(this.formatDateForRequest()).toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'GMT',
+          })
+        );
       }
     });
+  }
+
+  private async initializeDate() {
+    const rightTodayDate = await this.ipcMainService.getRightTodayDate();
+    console.log({ rightTodayDate });
+    this.currentDate = new Date(rightTodayDate);
+    this.formatDateForRequest.set(this.currentDate.toISOString().split('T')[0]);
+    this.humanDate.set(format(this.currentDate, 'EEEE, MMMM d, yyyy'));
   }
 
   ngOnInit(): void {
@@ -42,30 +76,37 @@ export class MerPagesDailyReportViewComponent implements OnInit {
   private async fetchData() {
     try {
       const user = this.sessionService.userSessionData();
-      const techCode = user.technicianCode;
-      this.techName.set(`${user.technicianFirstName} ${user.technicianLastName}`);
+      this.techName.set(
+        `${user.technicianFirstName} ${user.technicianLastName}`
+      );
 
-      const {listIntakes} = await window.MedicalRecordAPI.getListsOfIntakesOfDay({
-        technicianId: techCode,
-        date: this.formatDateForRequest()
+      const { listIntakes } = await this.ipcMainService.getListsOfIntakesOfDay({
+        technicianId: this.techName(),
+        date: this.formatDateForRequest(),
       });
       console.log({ listIntakes });
-      const sortedIntakes = (listIntakes || []).sort((a: any, b: any) => (a.acNumber || '') > (b.acNumber || '') ? 1 : -1);
+      const sortedIntakes = (listIntakes || []).sort((a: any, b: any) =>
+        (a.acNumber || '') > (b.acNumber || '') ? 1 : -1
+      );
       this.forms.set(sortedIntakes);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
 
+  DOBTransform(date: string) {
+    console.log({ dateTransform: date });
+    const arr = date.split('-');
+    const year = arr[2];
+    const month = arr[0];
+    const day = arr[1];
+    return `${year}-${month}-${day}`;
+  }
+
   format(date: string, formatStr: string): string {
     if (!date) return 'N/A';
-    const d = new Date(date);
-    if (isNaN(d.getTime())) return 'N/A';
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    if (formatStr === 'MM-dd-yyyy') {
-      return `${pad(d.getMonth() + 1)}-${pad(d.getDate())}-${d.getFullYear()}`;
-    }
-    return date;
+    console.log({ raw: date, date: parseISO(date) });
+    return parseISO(date).toLocaleDateString();
   }
 
   onDateChange(event: Event) {
@@ -77,25 +118,29 @@ export class MerPagesDailyReportViewComponent implements OnInit {
 
   async billingSheetPrint(formId: string) {
     console.log({ formId });
-    await window.PrinterPdfAPI.billingSheetPrint({
+    await this.ipcMainService.billingSheetPrint({
       PK_Intake: formId,
-    })
-  }
-
-  editSurvey(formId: string) {
-    const urlToNavigate = ProtectedRouteConstants.EDIT_BILLING_SHEET.substring(1).replace(':billing_sheet_id', formId);
-    this.router.navigate([urlToNavigate]).then(() => {
-      console.log('Navigated to edit billing sheet');
-    }).catch((error) => {
-      console.error('Error navigating to edit billing sheet:', error);
     });
   }
 
+  editSurvey(formId: string) {
+    const urlToNavigate = ProtectedRouteConstants.EDIT_BILLING_SHEET.substring(
+      1
+    ).replace(':billing_sheet_id', formId);
+    this.router
+      .navigate([urlToNavigate])
+      .then(() => {
+        console.log('Navigated to edit billing sheet');
+      })
+      .catch((error) => {
+        console.error('Error navigating to edit billing sheet:', error);
+      });
+  }
 
   async printDailyReport() {
     try {
       const user = this.sessionService.userSessionData();
-      const response = await window.PrinterPdfAPI.printDailyLog({
+      const response = await this.ipcMainService.printDailyLog({
         techCode: user.technicianCode || '',
         date: this.formatDateForRequest(),
       });

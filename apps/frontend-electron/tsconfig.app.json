@@ -1,12 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
     "outDir": "../../dist/out-tsc",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "vite/client", "electron"]
+    "types": ["node", "vite/client", "electron"],
   },
   "exclude": [
     "src/**/*.spec.ts",
@@ -18,10 +16,5 @@
     "vitest.config.ts",
     "vitest.config.mts"
   ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.mts",
-    "../../libs/types/src/**/*.ts",
-    "../../libs/mer-ui/common/src/index.ts"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.mts"]
 }

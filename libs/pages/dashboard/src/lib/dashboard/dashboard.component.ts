@@ -5,6 +5,7 @@ import { ProtectedRouteConstants } from '@mer-ui/common';
 @Component({
   selector: 'lib-mer-pages-dashboard',
   imports: [CommonModule, RouterModule],
+  standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })

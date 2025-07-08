@@ -18,22 +18,29 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { ValidationRules } from '@mer-ui/ui-input-text-field';
-import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@spartan-ng/brain/forms';
+import {
+  ErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
+} from '@spartan-ng/brain/forms';
 import { HlmFormFieldModule } from '@spartan-ng/ui-formfield-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { RadioPillControlType } from '../types/types';
 
 @Component({
-
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'mer-radio-group',
-  imports: [CommonModule, ReactiveFormsModule, HlmFormFieldModule, HlmInputDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HlmFormFieldModule,
+    HlmInputDirective,
+  ],
+  standalone: true,
   templateUrl: './ui-radio-group.component.html',
   styleUrl: './ui-radio-group.component.css',
-  standalone: true,
   providers: [
     {
       provide: ErrorStateMatcher,
@@ -55,10 +62,16 @@ export class MerUiRadioGroupComponent implements OnInit {
 
   public readonly id = computed(() => this.fieldDefinition().name || '');
   public readonly label = computed(() => this.fieldDefinition().label || '');
-  public readonly options = computed(() => this.fieldDefinition().options || []);
-  public readonly defaultValue = computed(() => this.fieldDefinition().defaultValue ?? '');
+  public readonly options = computed(
+    () => this.fieldDefinition().options || []
+  );
+  public readonly defaultValue = computed(
+    () => this.fieldDefinition().defaultValue ?? ''
+  );
   public readonly hidden = computed(() => false); // Add hidden if needed in type
-  public readonly validationRules = computed(() => (this.fieldDefinition() as any).validationRules || {});
+  public readonly validationRules = computed(
+    () => (this.fieldDefinition() as any).validationRules || {}
+  );
   public readonly keyValue = computed(
     () => this.fieldDefinition().keyValue || ''
   );
@@ -186,7 +199,7 @@ export class MerUiRadioGroupComponent implements OnInit {
     }
   }
 
-  public onChangeEvent($event: Event): void {
+  public onClickEvent($event: Event): void {
     // For radio group, set value from event target
     const value = ($event.target as HTMLInputElement).value;
     this.inputControl.setValue(value);
@@ -204,4 +217,3 @@ export class MerUiRadioGroupComponent implements OnInit {
     }
   }
 }
-

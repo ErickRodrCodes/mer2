@@ -11,6 +11,7 @@ export interface TMedicalReportAPI {
   }[]>;
   getListsOfIntakesOfDay(params: any): Promise<any>;
   intakeFormObtainNewPK(code: string): Promise<string>;
+  intakeFormObtainNewPK_Intake(): Promise<string>;
   recordIntakeForm(params: any): Promise<any>;
   updateIntakeForm(params: any): Promise<any>;
   getFormById(params: any): Promise<any>;
@@ -19,6 +20,7 @@ export interface TMedicalReportAPI {
   isTechnicianCodeInDB(code: string): Promise<boolean>;
   getFacilitiesByString(params: any): Promise<any>;
   getPatientByCombinedKey(params: any): Promise<any>;
+  getRightTodayDate(): Promise<number>;
   // Métodos adicionales pueden añadirse aquí…
   [key: string]: any;
 }

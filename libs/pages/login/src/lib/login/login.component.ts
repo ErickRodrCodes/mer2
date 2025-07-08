@@ -1,17 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import {
-    FormBuilder,
-    ReactiveFormsModule
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ProtectedRouteConstants, PublicRouteConstants } from '@mer-ui/common';
 import { MerUIInputTextFieldComponent } from '@mer-ui/ui-input-text-field';
-import { SessionService } from '@mer/services';
+import { IpcMainService, SessionService } from '@mer/services';
 import { LoggedUserInfo } from '@mer/types';
 import {
-    password_validation,
-    username_validation,
+  password_validation,
+  username_validation,
 } from './login.formDefinition';
 @Component({
   selector: 'lib-mer-pages-login',
@@ -21,6 +18,8 @@ import {
     ReactiveFormsModule,
     MerUIInputTextFieldComponent,
   ],
+  providers: [IpcMainService],
+  standalone: true,
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -36,6 +35,8 @@ export class MerPagesLoginComponent {
 
   // Initialize form with empty controls that will be populated by the input fields
   public form = this.formBuilder.group({});
+
+  public ipcMainService = inject(IpcMainService);
   constructor() {
     this.form.events.subscribe(() => {
       // let's ensure to remove the error message when the user starts typing
@@ -56,13 +57,13 @@ export class MerPagesLoginComponent {
       };
       console.log('Form is valid');
 
-      window.MedicalRecordAPI
+      this.ipcMainService
         .loginTechnician(formValue)
         .then((response: LoggedUserInfo) => {
           if (response.isLoggedIn) {
             // Guardar datos de login exitoso en el servicio de sesión
             this.sessionService.setLoginSuccess({
-              ...response
+              ...response,
             });
             this.router.navigate([this.protectedRouteConstants.DASHBOARD]);
           } else {

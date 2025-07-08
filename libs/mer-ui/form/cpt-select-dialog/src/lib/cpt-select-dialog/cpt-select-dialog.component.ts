@@ -3,19 +3,22 @@ import {
   Component,
   effect,
   ElementRef,
+  inject,
   input,
   OnInit,
   output,
   signal,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { CPTCode } from '@mer/types';
+import { IpcMainService } from '@mer/services';
 import { debounceTime, fromEvent, map } from 'rxjs';
 
-
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'mer-cpt-select-dialog',
   imports: [CommonModule],
+  standalone: true,
   templateUrl: './cpt-select-dialog.component.html',
   styleUrl: './cpt-select-dialog.component.css',
 })
@@ -27,6 +30,7 @@ export class CptSelectDialogComponent implements OnInit {
   public readonly cptCodes = signal<CPTCode[]>([]);
 
   public readonly openCptSelectDialog = input.required<boolean>();
+  public readonly initialSelectedCptCodes = input<CPTCode[]>([]);
   public readonly selectedCptCodes = output<CPTCode[]>();
   public readonly closed = output<void>();
 
@@ -35,19 +39,16 @@ export class CptSelectDialogComponent implements OnInit {
   public readonly dialog =
     viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
 
+  public ipcMainService = inject(IpcMainService);
+
   constructor() {
     effect(() => {
       if (this.openCptSelectDialog()) {
+        this._selectedCptCodes.set([...this.initialSelectedCptCodes()]);
         this.openModal();
         setTimeout(() => {
           this.searchRef().nativeElement.focus();
         }, 100);
-      }
-    });
-
-    effect(() => {
-      if (this.openCptSelectDialog()) {
-        this.selectedCptCodes.emit(this._selectedCptCodes());
       }
     });
 
@@ -107,7 +108,7 @@ export class CptSelectDialogComponent implements OnInit {
   }
 
   public async loadCptCodes() {
-    const codes = await window.MedicalRecordAPI.getListCPTCodes();
+    const codes = await this.ipcMainService.getListCPTCodes();
 
     this.cptCodes.set(codes);
   }
@@ -115,6 +116,11 @@ export class CptSelectDialogComponent implements OnInit {
   public closeModal() {
     this.dialog().nativeElement.close();
     this.selectedCptCodes.emit(this._selectedCptCodes());
+    this.closed.emit();
+  }
+
+  public onEscCloseModal() {
+    this.dialog().nativeElement.close();
     this.closed.emit();
   }
 
@@ -136,8 +142,6 @@ export class CptSelectDialogComponent implements OnInit {
       )
     );
   }
-
-
 
   public createNewCptCode() {
     console.log('Create new CPT code');

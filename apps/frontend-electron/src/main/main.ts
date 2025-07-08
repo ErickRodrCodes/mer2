@@ -6,6 +6,7 @@ import { join } from 'path';
 import './icpmain';
 import { logger } from './logger';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -20,9 +21,15 @@ process.env['APP_ROOT'] = path.resolve(__dirname, '../..');
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
-export const MAIN_DIST = path.join(process.env['APP_ROOT'], 'apps/frontend-electron');
-export const RENDERER_DIST = path.join(process.env['APP_ROOT'], 'apps/frontend');
-export const PREALOAD_PATH = path.join(__dirname, 'preload.js')
+export const MAIN_DIST = path.join(
+  process.env['APP_ROOT'],
+  'apps/frontend-electron'
+);
+export const RENDERER_DIST = path.join(
+  process.env['APP_ROOT'],
+  'apps/frontend'
+);
+export const PREALOAD_PATH = path.join(__dirname, 'preload.js');
 
 logger.info(process.env['VITE_DEV_SERVER_URL']);
 logger.info(process.env['APP_ROOT']);
@@ -96,7 +103,6 @@ app.on('activate', () => {
 });
 
 app.whenReady().then(() => {
-
   win = createWindow();
 
   app.on('activate', function () {
@@ -109,17 +115,17 @@ app.whenReady().then(() => {
 });
 
 app.on('browser-window-focus', function () {
-  if(!process.env['VITE_DEV_SERVER_URL']){
-    globalShortcut.register("CommandOrControl+R", () => {
-        console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+  if (!process.env['VITE_DEV_SERVER_URL']) {
+    globalShortcut.register('CommandOrControl+R', () => {
+      console.log('CommandOrControl+R is pressed: Shortcut Disabled');
     });
-    globalShortcut.register("F5", () => {
-        console.log("F5 is pressed: Shortcut Disabled");
+    globalShortcut.register('F5', () => {
+      console.log('F5 is pressed: Shortcut Disabled');
     });
   }
 });
 app.on('browser-window-blur', function () {
-  if(!process.env['VITE_DEV_SERVER_URL']){
+  if (!process.env['VITE_DEV_SERVER_URL']) {
     globalShortcut.unregister('CommandOrControl+R');
     globalShortcut.unregister('F5');
   }

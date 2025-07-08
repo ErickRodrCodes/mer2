@@ -16,6 +16,7 @@ import {
 import { tableCreationQueries } from '../data-layer/setup-queries';
 import { logger } from '../logger';
 import { dbConnector } from '../native/better-sqlite3';
+import { cptCodes } from './cptCodes';
 import { contentCptCodeOptions } from './setup-cpt-codes';
 
 export class DB {
@@ -395,9 +396,7 @@ export class DB {
    * @param intakeForm The intake form to record
    * @returns {string} The PK of the created intake form
    */
-  public recordIntakeForm(params: {
-    intakeForm: IntakeFormSchema;
-  }): string {
+  public recordIntakeForm(params: { intakeForm: IntakeFormSchema }): string {
     try {
       const { intakeForm } = params;
 
@@ -551,22 +550,30 @@ export class DB {
     technicianId: string;
     date: string;
   }) {
+    logger.log(this.getRightTodayDate());
     const { technicianId, date } = params;
+    const sonographer = technicianId.toUpperCase();
     // Get intakes for technician and date
     const intakesQuery = `
       SELECT * FROM intake_forms
-      WHERE PK_Intake LIKE @pattern AND dateOfService = @date
+      WHERE sonographer = @sonographer AND dateOfService = @date
     `;
+
     // this.db.open()
     const intakesStatement = this.db.prepare<
-      { pattern: string; date: string },
+      { sonographer: string; date: string },
       IntakeFormSchema
     >(intakesQuery);
 
     const intakes = intakesStatement.all({
-      pattern: `${technicianId}_%`,
+      sonographer,
       date,
     });
+
+    // best case scenario, is to obtain the list of cpt codes AS A MAP.
+    // yes a F MAP, looping into shit is not nice at all....
+
+    const rawCptCodesMap = new Map(cptCodes.map((cpt) => [cpt.PK_cptcode, cpt]));
 
     const listIntakes = intakes.map((intake: IntakeFormSchema) => {
       const {
@@ -591,8 +598,40 @@ export class DB {
         usedCPTCodes: CPTCode[];
       } = JSON.parse(cptText);
 
-      const abbreviations = textCpt.usedCPTCodes.map((cpt: CPTCode) => {
-        return cpt.abbreviation;
+      const rawCptCodes = cptCodes;
+
+      const mapSelectedOptions = new Map(textCpt.userCptOptions.map((userCptCode) => [userCptCode.PK_cptcode, userCptCode.selectedOptions]));
+
+      // from the selected used cpt codes extract the abbreviations
+      const abbreviations:string[] = [];
+
+
+
+      textCpt.usedCPTCodes.forEach((cpt: CPTCode) => {
+        const rawCptCode = rawCptCodesMap.get(cpt.PK_cptcode);
+        if (rawCptCode) {
+          // check if it has abbreviation.
+          if (rawCptCode.abbreviation) {
+            abbreviations.push(rawCptCode.abbreviation);
+          } else {
+            if(rawCptCode.type === 'CPT'){
+            const options = rawCptCode.options as { type: string; values: { abbreviation: string; optionId: string; label: string }[] };
+            const values = options.values;
+            if (options) {
+              options.values.forEach((value) => {
+                const selectedOptions = mapSelectedOptions.get(rawCptCode.PK_cptcode);
+                selectedOptions.forEach((option) => {
+
+                const findAbbreviation = values.find((item) => item.label === option);
+                if (findAbbreviation && findAbbreviation.abbreviation !== '') {
+                  abbreviations.push(findAbbreviation.abbreviation);
+                }
+              });
+            });
+            }
+          }
+          }
+        }
       });
 
       const cleanupAbbreviations = Array.from(
@@ -600,9 +639,7 @@ export class DB {
       ).join(', ');
 
       // Format the date
-      const formattedDob = patientDOB
-        ? this.formatDate(new Date(patientDOB), 'MM-dd-yyyy')
-        : '';
+      const formattedDob = patientDOB ? patientDOB : '';
 
       return {
         PK_Intake,
@@ -646,6 +683,10 @@ export class DB {
       .replace('MM', month)
       .replace('dd', day)
       .replace('yyyy', year.toString());
+  }
+
+  public intakeFormObtainNewPK_Intake(): string {
+    return crypto.randomUUID();
   }
 
   /**
@@ -767,9 +808,7 @@ export class DB {
    * @param intakeForm The intake form with updated data
    * @returns {boolean} True if successful, false otherwise
    */
-  public updateIntakeForm(params: {
-    intakeForm: IntakeFormSchema;
-  }): boolean {
+  public updateIntakeForm(params: { intakeForm: IntakeFormSchema }): boolean {
     const { intakeForm } = params;
     try {
       // Validate the intake form
@@ -883,5 +922,11 @@ export class DB {
       console.error('Error updating intake form:', error);
       return false;
     }
+  }
+
+  public getRightTodayDate() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today.getTime();
   }
 }

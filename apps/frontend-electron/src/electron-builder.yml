@@ -3,25 +3,24 @@ productName: M.U.S. Equipment Logger and Reporter
 directories:
   buildResources: build
 files:
-  - "!**/*"
-  - "!dist/apps/frontend-electron/package.json"
-  - "dist/apps/frontend"
-  - "dist/apps/frontend-electron"
-  - "dist/apps/frontend-electron-icons"
+  - '!**/*'
+  - '!dist/apps/frontend-electron/package.json'
+  - 'dist/apps/frontend'
+  - 'dist/apps/frontend-electron'
+  - 'dist/apps/frontend-electron-icons'
 asarUnpack:
   - resources/**
-  - "**/*.node"
 win:
-  executableName: MUS-Logger
+  executableName: mus-elr
   icon: dist/apps/frontend-electron-icons/icon.ico
-  publisherName: 'Mobile Ultrasound Services'
+  publisherName: 'Erick Rodriguez'
   # Uncomment the following lines if you will include certification
   # information on this file (change accordingly):
   # certificateFile: apps/frontend-electron/src/resources/certificate/Self.pfx
   # certificatePassword: ""
 nsis:
   installerIcon: dist/apps/frontend-electron-icons/setup.ico
-  artifactName: MUS-ELR-2.0.0-setup.${ext}
+  artifactName: mer-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
@@ -36,7 +35,7 @@ mac:
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
 dmg:
-  artifactName: MUS-ELR-2.0.0.${ext}
+  artifactName: mer-${version}.${ext}
 linux:
   icon: dist/apps/frontend-electron-icons/icon.ico
   target:
@@ -46,7 +45,11 @@ linux:
   maintainer: electronjs.org
   category: Utility
 appImage:
-  artifactName: MUS-ELR-2.0.0.${ext}
-npmRebuild: true
+  artifactName: frontend-${version}.${ext}
+npmRebuild: false
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
+
+publish:
+  provider: generic
+  url: https://{ provide here the url where updates will be read }

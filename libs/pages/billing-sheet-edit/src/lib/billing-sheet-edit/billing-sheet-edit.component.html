@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div class="mx-1">
   <form
     [formGroup]="form"
     (ngSubmit)="handleSubmit($event)"
@@ -9,7 +9,7 @@
 
     <!-- First row -->
     <div class="">
-      <mer-input-text-field [fieldDefinition]="ACNumber" class="pointer-events-none" [value]="newConsecutiveNumber()"/>
+      <mer-input-text-field [fieldDefinition]="ACNumber" [value]="newConsecutiveNumber()"/>
     </div>
     <div class="col-start-2 col-span-3">
       <mer-input-text-field [fieldDefinition]="sonographer"  />
@@ -104,8 +104,19 @@
       <p class="text-lg font-bold text-center">Studies performed</p>
     </div>
 
-    <div class="col-span-6">
+    <div class="col-span-5">
       <mer-input-text-field [fieldDefinition]="symptomsOrDiagnosis" />
+    </div>
+    <div class="flex flex-col h-full">
+      <div class="grow"></div>
+        <button
+          class="btn w-full btn-info align-bottom"
+          type="button"
+          (click)="openCptDialog.set(true)"
+        >
+          Add CPT Code
+        </button>
+
     </div>
 
     <mer-input-text-field
@@ -181,6 +192,7 @@
     <!-- TODO: Implement CptCodeSelect dialog -->
     <mer-cpt-select-dialog
     [openCptSelectDialog]="openCptDialog()"
+    [initialSelectedCptCodes]="selectedCptCodes()"
     (selectedCptCodes)="handleCptCodesChange($event)"
     (closed)="openCptDialog.set(false)"
   />

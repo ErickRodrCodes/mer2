@@ -84,8 +84,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "frontend:build",
-        "port": 4200,
-        "staticFilePath": "dist/apps/frontend",
+        "staticFilePath": "dist/apps/frontend/browser",
         "spa": true
       }
     }

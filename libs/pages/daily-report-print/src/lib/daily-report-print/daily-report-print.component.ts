@@ -1,13 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProtectedRouteConstants } from '@mer-ui/common';
-import { SessionService } from '@mer/services';
+import { IpcMainService, SessionService } from '@mer/services';
 import { format as formatDateFns, parse } from 'date-fns';
 
 @Component({
   selector: 'lib-mer-pages-daily-report-print',
   imports: [CommonModule],
+  providers: [IpcMainService],
+  standalone: true,
   templateUrl: './daily-report-print.component.html',
   styleUrl: './daily-report-print.component.css',
 })
@@ -15,16 +23,16 @@ export class MerPagesDailyReportPrintComponent implements OnInit {
   private readonly sessionService = inject(SessionService);
   public readonly activeRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  public readonly routes = ProtectedRouteConstants
+  public readonly routes = ProtectedRouteConstants;
   public readonly technicianId = signal('');
-
 
   private readonly currentDate = new Date();
   private formatDateForRequest = signal('');
   public readonly humanDate = signal('');
   public readonly techName = signal('');
-  forms: WritableSignal<any[]> = signal([]);
+  public readonly forms: WritableSignal<any[]> = signal([]);
 
+  public ipcMainService = inject(IpcMainService);
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params) => {
@@ -38,23 +46,27 @@ export class MerPagesDailyReportPrintComponent implements OnInit {
       const humanDate = formatDateFns(parsedDate, 'EEEE, MMMM d, yyyy');
       this.humanDate.set(humanDate);
 
-
       this.fetchData();
     });
   }
 
   private async fetchData() {
     try {
-      const getTechnicianName = await window.MedicalRecordAPI.getTechnicianNameByCode(this.technicianId());
+      const getTechnicianName =
+        await this.ipcMainService.getTechnicianNameByCode(this.technicianId());
       const technicianName = getTechnicianName[0];
-      this.techName.set(`${technicianName.technicianFirstName} ${technicianName.technicianLastName}`);
+      this.techName.set(
+        `${technicianName.technicianFirstName} ${technicianName.technicianLastName}`
+      );
 
-      const {listIntakes} = await window.MedicalRecordAPI.getListsOfIntakesOfDay({
-        technicianId: this.technicianId(),
-        date: this.formatDateForRequest()
+      const { listIntakes } = await this.ipcMainService.getListsOfIntakesOfDay({
+        technicianId: this.techName(),
+        date: this.formatDateForRequest(),
       });
 
-      const sortedIntakes = (listIntakes || []).sort((a: any, b: any) => (a.acNumber || '') > (b.acNumber || '') ? 1 : -1);
+      const sortedIntakes = (listIntakes || []).sort((a: any, b: any) =>
+        (a.acNumber || '') > (b.acNumber || '') ? 1 : -1
+      );
       this.forms.set(sortedIntakes);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -82,11 +94,10 @@ export class MerPagesDailyReportPrintComponent implements OnInit {
   async printDailyReport() {
     try {
       const user = this.sessionService.userSessionData();
-      const response = await window.PrinterPdfAPI.printDailyLog({
+      const response = await this.ipcMainService.printDailyLog({
         techCode: user.technicianCode || '',
         date: this.formatDateForRequest(),
       });
-      console.log({ response });
     } catch (error) {
       console.error('Error printing report:', error);
     }

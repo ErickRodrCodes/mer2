@@ -1,6 +1,6 @@
 {
-  "version": "2.0.0",
+  "version": "2.2.0",
   "name": "frontend-electron",
   "author": "Erick Rodriguez",
-  "description": "A Desktop application for the capture of medical billing forms and daily reports"
+  "description": "M.U.S. Equipment Logger and Reporte"
 }

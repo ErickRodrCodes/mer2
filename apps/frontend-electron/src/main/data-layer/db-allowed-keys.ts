@@ -9,6 +9,7 @@ export const with_DB_AllowedMethodNames: readonly DBMethodName[] = [
   'listTables',
   'isTechnicianCodeInDB',
   'getTechnicianNameByCode',
+  'intakeFormObtainNewPK_Intake',
   'loginTechnician',
   'addNewTechnician',
   'getListCPTCodes',
@@ -23,4 +24,5 @@ export const with_DB_AllowedMethodNames: readonly DBMethodName[] = [
   'updateIntakeForm',
   'getFacilitiesByString',
   'recordNewFacility',
+  'getRightTodayDate'
 ] as const;

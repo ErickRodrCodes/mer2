@@ -2,6 +2,8 @@
   "name": "@mer-ui/common",
   "version": "0.0.1",
   "peerDependencies": {
+    "@mer-ui/ui-input-text-field": "0.0.1",
+    "@mer-ui/ui-radio-group": "0.0.1",
     "vite": "^6.0.0",
     "@analogjs/vite-plugin-angular": "~1.10.0",
     "@nx/vite": "20.6.0"

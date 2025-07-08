@@ -4,7 +4,7 @@ import {
   inject,
   OnInit,
   signal,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -13,10 +13,7 @@ import { MerUiRadioGroupComponent } from '@mer-ui/ui-radio-group';
 import { HlmRadioGroupModule } from '@spartan-ng/ui-radiogroup-helm';
 
 import { ActivatedRoute } from '@angular/router';
-import {
-  CPTCode,
-  FacilitiesSchema,
-} from '@mer/types';
+import { CPTCode, FacilitiesSchema } from '@mer/types';
 import {
   ACNumber,
   amountToBePaid,
@@ -50,16 +47,20 @@ import {
   withAdmitDate,
 } from './billing-sheet-print.formDefinition';
 
+import { IpcMainService } from '@mer/services';
+
 @Component({
   selector: 'lib-mer-pages-billing-sheet-print',
   standalone: true,
-  imports: [    CommonModule,
+  imports: [
+    CommonModule,
     RouterModule,
     ReactiveFormsModule,
     MerUIInputTextFieldComponent,
     MerUiRadioGroupComponent,
     HlmRadioGroupModule,
   ],
+  providers: [IpcMainService],
   templateUrl: './billing-sheet-print.component.html',
   styleUrl: './billing-sheet-print.component.css',
 })
@@ -127,13 +128,14 @@ export class MerPagesBillingSheetPrintComponent implements OnInit {
     userCptOptions: {
       PK_cptcode: string;
       selectedOptions: string[];
-    }[],
-    usedCPTCodes:CPTCode[]
+    }[];
+    usedCPTCodes: CPTCode[];
   }> = signal({
     userCptOptions: [],
     usedCPTCodes: [],
-  })
+  });
 
+  public ipcMainService = inject(IpcMainService);
 
   constructor() {
     this.form = this.formBuilder.group({});
@@ -146,11 +148,11 @@ export class MerPagesBillingSheetPrintComponent implements OnInit {
   private async prefillForm(): Promise<void> {
     const formId = this.route.snapshot.params['billing_sheet_id'];
     console.log('formId', formId);
-    const data = await window.MedicalRecordAPI.getFormById({intakeId:formId});
+    const data = await this.ipcMainService.getFormById({ intakeId: formId });
     if (data) {
       Object.entries(data).forEach(([key, value]) => {
         this.form.patchValue({
-          [key]: value
+          [key]: value,
         });
       });
     }
@@ -163,21 +165,23 @@ export class MerPagesBillingSheetPrintComponent implements OnInit {
         usedCPTCodes: cptText.usedCPTCodes,
       });
       this.cptJSonValues.set(cptText.userCptOptions);
-      this.selectedCptCodes.set(cptText.usedCPTCodes)
+      this.selectedCptCodes.set(cptText.usedCPTCodes);
 
       //format the cpt codes
     }
 
-    this.saveStateCptCodes().userCptOptions.forEach(item => {
+    this.saveStateCptCodes().userCptOptions.forEach((item) => {
       const cptCode = item.PK_cptcode;
       const selectedOptions = item.selectedOptions;
-      selectedOptions.forEach(option => {
-        const element = document.querySelector(`input[name="${cptCode}"][value="${option}"]`);
+      selectedOptions.forEach((option) => {
+        const element = document.querySelector(
+          `input[name="${cptCode}"][value="${option}"]`
+        );
         if (element instanceof HTMLInputElement) {
           element.checked = true;
         }
       });
-    })
+    });
   }
 
   public handleFacilitySelect(
@@ -258,7 +262,7 @@ export class MerPagesBillingSheetPrintComponent implements OnInit {
   }
 
   public async recordForm(record: any): Promise<void> {
-    const response = await window.MedicalRecordAPI.recordIntakeForm({
+    const response = await this.ipcMainService.recordIntakeForm({
       intakeForm: record,
     });
     this.saveForm.set(true);
@@ -274,12 +278,16 @@ export class MerPagesBillingSheetPrintComponent implements OnInit {
   }
 
   public verifyChecked(cptCode: CPTCode, option: string): boolean {
-    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(item => item.PK_cptcode === cptCode.PK_cptcode);
+    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(
+      (item) => item.PK_cptcode === cptCode.PK_cptcode
+    );
     return cptCodeObject?.selectedOptions.includes(option) || false;
   }
 
   public valueCptText(cptCode: CPTCode): string {
-    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(item => item.PK_cptcode === cptCode.PK_cptcode);
+    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(
+      (item) => item.PK_cptcode === cptCode.PK_cptcode
+    );
     console.log('cptCodeObject', cptCodeObject);
     return cptCodeObject?.selectedOptions[0].toUpperCase() || '';
   }

@@ -7,10 +7,12 @@
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
-      "dependsOn": [{
-        "projects": ["frontend"],
-        "target": "build"
-      }],
+      "dependsOn": [
+        {
+          "projects": ["frontend"],
+          "target": "build"
+        }
+      ],
       "options": {
         "outputPath": "dist/apps/frontend-electron"
       }
@@ -32,19 +34,27 @@
       }
     },
     "electron": {
+
       "configurations": {
         "build": {
-          "dependsOn": [{
-            "projects": ["frontend-electron"],
-            "target": "build"
-          }],
-          "options": {
-            "commands": ["nx run frontend-electron:build"],
-            "parallel": false
-          }
+          "dependsOn": [
+            {
+              "projects": ["frontend-electron"],
+              "target": "dist"
+            }
+          ]
         },
         "serve": {
-          "dependsOn": ["build"],
+          "dependsOn": [
+            {
+              "projects": ["frontend"],
+              "target": "build"
+            },
+            {
+              "projects": ["frontend-electron"],
+              "target": "build"
+            }
+          ],
           "commands": [
             "nx run frontend:serve",
             "nx run frontend-electron:serve"
@@ -60,9 +70,10 @@
       "defaultConfiguration": "default",
       "dependsOn": [
         {
-        "projects": ["frontend-electron"],
-        "target": "build"
-      }],
+          "projects": ["frontend-electron"],
+          "target": "build"
+        }
+      ],
       "options": {
         "hostProject": "frontend-electron",
         "hostProjectRoot": "{projectRoot}",
@@ -96,7 +107,7 @@
         "mainOutputPath": "dist/apps/frontend-electron",
         "mainOutputFilename": "main.js",
         "author": "Erick Rodriguez",
-        "description": "A Desktop application for the capture of medical billing forms and daily reports"
+        "description": "M.U.S. Equipment Logger and Reporte"
       }
     },
     "preview": {
@@ -114,6 +125,5 @@
     "lint": {
       "dependsOn": ["^lint"]
     }
-  },
-  "tags": ["scope:frontend-electron"]
+  }
 }

@@ -4,7 +4,7 @@ import {
   inject,
   OnInit,
   signal,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -12,16 +12,46 @@ import { ProtectedRouteConstants } from '@mer-ui/common';
 import { CptSelectDialogComponent } from '@mer-ui/form/cpt-select-dialog';
 import { MerUIInputTextFieldComponent } from '@mer-ui/ui-input-text-field';
 import { MerUiRadioGroupComponent } from '@mer-ui/ui-radio-group';
-import {
-  CPTCode,
-  FacilitiesSchema,
-} from '@mer/types';
+import { IpcMainService } from '@mer/services';
+import { CPTCode, FacilitiesSchema } from '@mer/types';
 import { HlmRadioGroupModule } from '@spartan-ng/ui-radiogroup-helm';
-import { ACNumber, amountToBePaid, authorizationNumber, cash, checkNumber, consecutiveNumber, creditCard, dateOfService, facilityAddress, facilityCity, facilityLocationOption, facilityName, facilityState, facilityZipcode, faxNumber, groupNumber, identification, orderingPhysician, patientDOB, patientFirstName, patientLasttName, patientMedicareNumber, patientSex, primaryInsurance, primaryInsurancePolicyNumber, secondaryInsurance, secondaryInsurancePolicyNumber, sonographer, symptomsOrDiagnosis, withAdmitDate } from './billing-sheet-print.formDefinition';
+import {
+  ACNumber,
+  amountToBePaid,
+  authorizationNumber,
+  cash,
+  checkNumber,
+  consecutiveNumber,
+  creditCard,
+  dateOfService,
+  facilityAddress,
+  facilityCity,
+  facilityLocationOption,
+  facilityName,
+  facilityState,
+  facilityZipcode,
+  faxNumber,
+  groupNumber,
+  identification,
+  orderingPhysician,
+  patientDOB,
+  patientFirstName,
+  patientLasttName,
+  patientMedicareNumber,
+  patientSex,
+  primaryInsurance,
+  primaryInsurancePolicyNumber,
+  secondaryInsurance,
+  secondaryInsurancePolicyNumber,
+  sonographer,
+  symptomsOrDiagnosis,
+  withAdmitDate,
+} from './billing-sheet-print.formDefinition';
 
 @Component({
   selector: 'lib-mer-pages-billing-sheet-edit',
-  imports: [    CommonModule,
+  imports: [
+    CommonModule,
     RouterModule,
     ReactiveFormsModule,
     MerUIInputTextFieldComponent,
@@ -29,6 +59,8 @@ import { ACNumber, amountToBePaid, authorizationNumber, cash, checkNumber, conse
     HlmRadioGroupModule,
     CptSelectDialogComponent,
   ],
+  providers: [IpcMainService],
+  standalone: true,
   templateUrl: './billing-sheet-edit.component.html',
   styleUrl: './billing-sheet-edit.component.css',
 })
@@ -97,13 +129,14 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
     userCptOptions: {
       PK_cptcode: string;
       selectedOptions: string[];
-    }[],
-    usedCPTCodes:CPTCode[]
+    }[];
+    usedCPTCodes: CPTCode[];
   }> = signal({
     userCptOptions: [],
     usedCPTCodes: [],
-  })
+  });
 
+  public ipcMainService = inject(IpcMainService);
 
   constructor() {
     this.form = this.formBuilder.group({});
@@ -116,11 +149,11 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
   private async prefillForm(): Promise<void> {
     const formId = this.route.snapshot.params['billing_sheet_id'];
     console.log('formId', formId);
-    const data = await window.MedicalRecordAPI.getFormById({intakeId:formId});
+    const data = await this.ipcMainService.getFormById({ intakeId: formId });
     if (data) {
       Object.entries(data).forEach(([key, value]) => {
         this.form.patchValue({
-          [key]: value
+          [key]: value,
         });
       });
     }
@@ -133,21 +166,23 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
         usedCPTCodes: cptText.usedCPTCodes,
       });
       this.cptJSonValues.set(cptText.userCptOptions);
-      this.selectedCptCodes.set(cptText.usedCPTCodes)
+      this.selectedCptCodes.set(cptText.usedCPTCodes);
 
       //format the cpt codes
     }
 
-    this.saveStateCptCodes().userCptOptions.forEach(item => {
+    this.saveStateCptCodes().userCptOptions.forEach((item) => {
       const cptCode = item.PK_cptcode;
       const selectedOptions = item.selectedOptions;
-      selectedOptions.forEach(option => {
-        const element = document.querySelector(`input[name="${cptCode}"][value="${option}"]`);
+      selectedOptions.forEach((option) => {
+        const element = document.querySelector(
+          `input[name="${cptCode}"][value="${option}"]`
+        );
         if (element instanceof HTMLInputElement) {
           element.checked = true;
         }
       });
-    })
+    });
   }
 
   public handleFacilitySelect(
@@ -183,9 +218,10 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
     return options && Array.isArray(options.values);
   }
 
-
   public valueCptText(cptCode: CPTCode): string {
-    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(item => item.PK_cptcode === cptCode.PK_cptcode);
+    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(
+      (item) => item.PK_cptcode === cptCode.PK_cptcode
+    );
     console.log('cptCodeObject', cptCodeObject);
     return cptCodeObject?.selectedOptions[0].toUpperCase() || '';
   }
@@ -195,14 +231,14 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
     const selectedCptCodes = this.selectedCptCodes();
 
     // if an existing cpt code is not in the selected cpt codes, add it
-    cptCodes.forEach(cpt => {
+    cptCodes.forEach((cpt) => {
       if (!selectedCptCodes.includes(cpt)) {
         selectedCptCodes.push(cpt);
       }
     });
 
     // otherwise remove cpt codes on selectedCptCodes that are not in the cptCodes array
-    selectedCptCodes.forEach(cpt => {
+    selectedCptCodes.forEach((cpt) => {
       if (!cptCodes.includes(cpt)) {
         selectedCptCodes.splice(selectedCptCodes.indexOf(cpt), 1);
       }
@@ -212,18 +248,20 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
     this.selectedCptCodes.set(selectedCptCodes);
 
     // update the cptJSonValues signal with proper structure
-    this.cptJSonValues.set(selectedCptCodes.map(cpt => ({
-      PK_cptcode: cpt.PK_cptcode,
-      selectedOptions: cpt.type === 'TEXT' ? [cpt.description] : [],
-    })));
+    this.cptJSonValues.set(
+      selectedCptCodes.map((cpt) => ({
+        PK_cptcode: cpt.PK_cptcode,
+        selectedOptions: cpt.type === 'TEXT' ? [cpt.description] : [],
+      }))
+    );
 
     // Actualiza el formulario con la estructura completa
     this.form.patchValue(
       {
         cptText: JSON.stringify({
           userCptOptions: this.cptJSonValues(),
-          usedCPTCodes: selectedCptCodes
-        })
+          usedCPTCodes: selectedCptCodes,
+        }),
       },
       {
         emitEvent: false,
@@ -232,13 +270,23 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
   }
 
   public async updateRecord(record: any): Promise<void> {
-    const response = await window.MedicalRecordAPI.updateIntakeForm({
+    const extractedCptText = JSON.parse(record.cptText);
+    const updatedCptText = {
+      userCptOptions: this.cptJSonValues(),
+      usedCPTCodes: this.selectedCptCodes(),
+    };
+
+    record.cptText = JSON.stringify(updatedCptText);
+
+    const response = await this.ipcMainService.updateIntakeForm({
       intakeForm: record,
     });
     this.saveForm.set(true);
     // send signal to print the pdf othe new record
-    if(response) {
-      await window.PrinterPdfAPI.billingSheetPrint({PK_Intake: record.PK_Intake});
+    if (response) {
+      await this.ipcMainService.billingSheetPrint({
+        PK_Intake: record.PK_Intake,
+      });
     }
   }
 
@@ -253,7 +301,9 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
     const currentSelectedCptCodes = this.selectedCptCodes();
 
     // Busca si ya existe el CPT code
-    let cptEntry = currentStateCpts.find(cpt => cpt.PK_cptcode === keyCptCode);
+    let cptEntry = currentStateCpts.find(
+      (cpt) => cpt.PK_cptcode === keyCptCode
+    );
 
     if (!cptEntry) {
       // Si no existe, lo creas
@@ -267,21 +317,26 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
         cptEntry.selectedOptions.push(value);
       }
     } else {
-      cptEntry.selectedOptions = cptEntry.selectedOptions.filter(opt => opt !== value);
+      cptEntry.selectedOptions = cptEntry.selectedOptions.filter(
+        (opt) => opt !== value
+      );
     }
     // Actualiza el signal
     this.cptJSonValues.set([...currentStateCpts]);
 
     const updatedCptText = {
       userCptOptions: this.cptJSonValues(),
-      usedCPTCodes: currentSelectedCptCodes
+      usedCPTCodes: currentSelectedCptCodes,
     };
 
-    this.form.patchValue({
-      cptText: JSON.stringify(updatedCptText),
-    }, {
-      emitEvent: false,
-    });
+    this.form.patchValue(
+      {
+        cptText: JSON.stringify(updatedCptText),
+      },
+      {
+        emitEvent: false,
+      }
+    );
     console.log('handleCptCheckboxChange', updatedCptText);
   }
 
@@ -296,13 +351,15 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
     const currentSelectedCptCodes = this.selectedCptCodes();
 
     // Busca si ya existe el CPT code
-    let cptEntry = currentStateCpts.find(cpt => cpt.PK_cptcode === keyCptCode);
+    let cptEntry = currentStateCpts.find(
+      (cpt) => cpt.PK_cptcode === keyCptCode
+    );
 
     if (!cptEntry) {
       // Si no existe, lo creas
       cptEntry = {
         PK_cptcode: keyCptCode,
-        selectedOptions: cptCode.type === 'TEXT' ? [value.toUpperCase()] : []
+        selectedOptions: cptCode.type === 'TEXT' ? [value.toUpperCase()] : [],
       };
       currentStateCpts.push(cptEntry);
     } else if (cptCode.type === 'TEXT') {
@@ -315,15 +372,18 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
     // Actualiza el texto del CPT en el formulario
     const updatedCptText = {
       userCptOptions: this.cptJSonValues(),
-      usedCPTCodes: currentSelectedCptCodes
+      usedCPTCodes: currentSelectedCptCodes,
     };
 
     // Actualiza el formulario con la estructura completa
-    this.form.patchValue({
-      cptText: JSON.stringify(updatedCptText)
-    }, {
-      emitEvent: false,
-    });
+    this.form.patchValue(
+      {
+        cptText: JSON.stringify(updatedCptText),
+      },
+      {
+        emitEvent: false,
+      }
+    );
 
     console.log('Updated CPT Text:', updatedCptText);
   }
@@ -337,7 +397,9 @@ export class MerPagesBillingSheetEditComponent implements OnInit {
   }
 
   public verifyChecked(cptCode: CPTCode, option: string): boolean {
-    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(item => item.PK_cptcode === cptCode.PK_cptcode);
+    const cptCodeObject = this.saveStateCptCodes().userCptOptions.find(
+      (item) => item.PK_cptcode === cptCode.PK_cptcode
+    );
     return cptCodeObject?.selectedOptions.includes(option) || false;
   }
 }

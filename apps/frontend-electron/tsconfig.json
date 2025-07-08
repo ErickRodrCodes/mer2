@@ -12,10 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "types": ["vite/client"]
   },
-  "include": [
-    "src",
-    "../../libs/mer-ui/common/src/lib/constants.ts"
-  ],
+  "include": [],
   "references": [
     {
       "path": "./tsconfig.app.json"

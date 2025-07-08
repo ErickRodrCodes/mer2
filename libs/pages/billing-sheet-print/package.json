@@ -4,6 +4,14 @@
   "peerDependencies": {
     "@angular/common": "^19.2.0",
     "@angular/core": "^19.2.0",
+    "@angular/forms": "~19.2.0",
+    "@angular/router": "~19.2.0",
+    "@mer-ui/ui-input-text-field": "0.0.1",
+    "@mer-ui/ui-radio-group": "0.0.1",
+    "@spartan-ng/ui-radiogroup-helm": "0.0.1",
+    "@mer/types": "0.0.1",
+    "@mer/services": "0.0.1",
+    "@mer-ui/common": "0.0.1",
     "vite": "^6.0.0",
     "@analogjs/vite-plugin-angular": "~1.10.0",
     "@nx/vite": "20.6.0"

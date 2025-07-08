@@ -24,9 +24,5 @@
     "src/**/*.spec.jsx",
     "src/test-setup.ts"
   ],
-  "include": [
-    "src/**/*.ts",
-    "../../../../electron-api-types/src/window.d.ts",
-    "../../../../apps/frontend-electron/src/types/zod/schemas.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }

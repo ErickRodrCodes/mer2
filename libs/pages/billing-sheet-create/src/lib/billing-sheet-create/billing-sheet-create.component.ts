@@ -5,7 +5,7 @@ import {
   inject,
   OnInit,
   signal,
-  WritableSignal
+  WritableSignal,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -45,10 +45,10 @@ import {
   secondaryInsurancePolicyNumber,
   sonographer,
   symptomsOrDiagnosis,
-  withAdmitDate
+  withAdmitDate,
 } from './billing-sheet-create.formDefinition';
 
-import { SessionService } from '@mer/services';
+import { IpcMainService, SessionService } from '@mer/services';
 import { CPTCode, FacilitiesSchema } from '@mer/types';
 
 @Component({
@@ -64,6 +64,7 @@ import { CPTCode, FacilitiesSchema } from '@mer/types';
     CptSelectDialogComponent,
     HlmRadioGroupModule,
   ],
+  providers: [IpcMainService],
   templateUrl: './billing-sheet-create.component.html',
   styleUrl: './billing-sheet-create.component.css',
 })
@@ -116,60 +117,25 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
   public readonly facilitySearchResults = signal<any[]>([]);
   public readonly identificationSearchResults = signal<any[]>([]);
   public readonly newConsecutiveNumber: WritableSignal<string> = signal('');
-  public cptJSonValues: WritableSignal<{
-    PK_cptcode: string;
-    selectedOptions: string[];
-  }[]> = signal([]);
+  public cptJSonValues: WritableSignal<
+    {
+      PK_cptcode: string;
+      selectedOptions: string[];
+    }[]
+  > = signal([]);
 
   public readonly saveStateCptCodes: WritableSignal<{
     userCptOptions: {
       PK_cptcode: string;
       selectedOptions: string[];
-    }[],
-    usedCPTCodes:CPTCode[]
+    }[];
+    usedCPTCodes: CPTCode[];
   }> = signal({
     userCptOptions: [],
     usedCPTCodes: [],
-  })
+  });
 
-
-
-  public readonly testRecord = {
-
-      "PK_Intake": "ERICK001_20250603_003",
-      "acNumber": "ERICK001_20250603_003",
-      "sonographer": "ERICK RODRIGUEZ",
-      "faxNumber": "",
-      "dateOfService": "2025-06-03",
-      "amountToBePaid": "100",
-      "checkNumber": "",
-      "cash": "100",
-      "creditCard": "",
-      "facilityLocationType": "Prison/Jail",
-      "facilityName": "TEST1",
-      "facilityAddress": "T1",
-      "facilityCity": "T1",
-      "facilityState": "T1",
-      "facilityZipcode": "12345",
-      "withAdmitDate": "2001-01-01",
-      "identification": "",
-      "patientMedicareNumber": "1",
-      "patientFirstName": "1",
-      "patientLasttName": "1",
-      "patientDOB": "2000-01-01",
-      "patientSex": "Other",
-      "primaryInsurance": "1",
-      "primaryInsurancePolicyNumber": "1",
-      "secondaryInsurance": "1",
-      "secondaryInsurancePolicyNumber": "1",
-      "authorizationNumber": "1",
-      "groupNumber": "1",
-      "orderingPhysician": "1",
-      "symptomsOrDiagnosis": "1",
-      "cptText": "{\"userCptOptions\":[{\"PK_cptcode\":\"CPT_76770\",\"selectedOptions\":[]},{\"PK_cptcode\":\"CPT_93882\",\"selectedOptions\":[]},{\"PK_cptcode\":\"CPT_93971A\",\"selectedOptions\":[\"LT\",\"+\"]}],\"usedCPTCodes\":[{\"PK_cptcode\":\"CPT_76770\",\"id\":10,\"abbreviation\":\"RENAL\",\"type\":\"CPT\",\"code\":\"76770\",\"description\":\"Renal\",\"value\":null,\"options\":null,\"created_at\":\"2025-05-23 18:27:05\",\"updated_at\":\"2025-05-23 18:27:05\"},{\"PK_cptcode\":\"CPT_93882\",\"id\":22,\"abbreviation\":\"\",\"type\":\"CPT\",\"code\":\"93882\",\"description\":\"Carotid Duplex Unilateral\",\"value\":null,\"options\":{\"type\":\"checkbox\",\"values\":[{\"optionId\":\"93882RT\",\"abbreviation\":\"RT CAROTID\",\"label\":\"RT\"},{\"optionId\":\"93882LT\",\"abbreviation\":\"LT CAROTID\",\"label\":\"LT\"}]},\"created_at\":\"2025-05-23 18:27:05\",\"updated_at\":\"2025-05-23 18:27:05\"},{\"PK_cptcode\":\"CPT_93971A\",\"id\":32,\"abbreviation\":\"\",\"type\":\"CPT\",\"code\":\"93971\",\"description\":\"Unilateral Upper Extremity Venous\",\"value\":null,\"options\":{\"type\":\"checkbox\",\"values\":[{\"optionId\":\"93971URT\",\"abbreviation\":\"RUEV\",\"label\":\"RT\"},{\"optionId\":\"93971ULT\",\"abbreviation\":\"LUEV\",\"label\":\"LT\"},{\"optionId\":\"93971UPLUS\",\"abbreviation\":\"\",\"label\":\"+\"},{\"optionId\":\"93971UMINUS\",\"abbreviation\":\"\",\"label\":\"-\"}]},\"created_at\":\"2025-05-23 18:27:05\",\"updated_at\":\"2025-05-23 18:27:05\"}]}"
-
-}
-
+  public ipcMainService = inject(IpcMainService);
 
   constructor() {
     this.form = this.formBuilder.group({});
@@ -181,33 +147,37 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
 
       console.log('saveStateCptCodes effect', this.saveStateCptCodes());
     });
-
-    // this.recordForm(this.testRecord);
-
   }
 
   ngOnInit(): void {
-
-
     this.prefillInitialValues();
   }
 
   private async prefillInitialValues(): Promise<void> {
     const code = this.sessionService.userSessionData().technicianCode;
     const getConsecutiveNumber =
-      await window.MedicalRecordAPI.intakeFormObtainNewPK(code);
+      await this.ipcMainService.intakeFormObtainNewPK(code);
+    const PK_IntakeValue =
+      await this.ipcMainService.intakeFormObtainNewPK_Intake();
     this.newConsecutiveNumber.set(getConsecutiveNumber);
-    this.form.patchValue({
-      acNumber: getConsecutiveNumber,
-      PK_Intake: getConsecutiveNumber,
-      sonographer: `${this.sessionService.userSessionData().technicianFirstName} ${this.sessionService.userSessionData().technicianLastName}`,
-      dateOfService: new Date().toISOString().split('T')[0],
-    },{
-      emitEvent: false,
-    });
+    this.form.patchValue(
+      {
+        acNumber: getConsecutiveNumber,
+        PK_Intake: PK_IntakeValue,
+        sonographer: `${
+          this.sessionService.userSessionData().technicianFirstName
+        } ${this.sessionService.userSessionData().technicianLastName}`,
+        dateOfService: new Date().toISOString().split('T')[0],
+      },
+      {
+        emitEvent: false,
+      }
+    );
   }
 
-  public handleFacilitySelect(facility: FacilitiesSchema & {PK_facility: string}): void {
+  public handleFacilitySelect(
+    facility: FacilitiesSchema & { PK_facility: string }
+  ): void {
     this.form.patchValue({
       facilityName: facility.facilityName,
       facilityAddress: facility.facilityAddress,
@@ -238,22 +208,22 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
 
     // if an existing cpt code is not in the selected cpt codes, add it
     cptCodes
-    .sort((a, b) => {
-      // First sort by type
-      if (a.type !== b.type) {
-        return a.type.localeCompare(b.type);
-      }
-      // Then sort by code
-      return a.code.localeCompare(b.code);
-    })
-    .forEach(cpt => {
-      if (!selectedCptCodes.includes(cpt)) {
-        selectedCptCodes.push(cpt);
-      }
-    });
+      .sort((a, b) => {
+        // First sort by type
+        if (a.type !== b.type) {
+          return a.type.localeCompare(b.type);
+        }
+        // Then sort by code
+        return a.code.localeCompare(b.code);
+      })
+      .forEach((cpt) => {
+        if (!selectedCptCodes.includes(cpt)) {
+          selectedCptCodes.push(cpt);
+        }
+      });
 
     // otherwise remove cpt codes on selectedCptCodes that are not in the cptCodes array
-    selectedCptCodes.forEach(cpt => {
+    selectedCptCodes.forEach((cpt) => {
       if (!cptCodes.includes(cpt)) {
         selectedCptCodes.splice(selectedCptCodes.indexOf(cpt), 1);
       }
@@ -263,29 +233,35 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
     this.selectedCptCodes.set(selectedCptCodes);
 
     // update the cptJSonValues signal
-    this.cptJSonValues.set(selectedCptCodes.map(cpt => ({
-      PK_cptcode: cpt.PK_cptcode,
-      selectedOptions: [],
-    })));
+    this.cptJSonValues.set(
+      selectedCptCodes.map((cpt) => ({
+        PK_cptcode: cpt.PK_cptcode,
+        selectedOptions: [],
+      }))
+    );
   }
 
   public async handleFacilityCurrentValue(value: string): Promise<void> {
     console.log('handleFacilityCurrentValue', value);
-    const facility = await window.MedicalRecordAPI.getFacilitiesByString(value);
+    const facility = await this.ipcMainService.getFacilitiesByString(value);
     this.facilitySearchResults.set(facility);
     console.log('facility', facility);
   }
 
   public async handleIdentificationCurrentValue(value: string): Promise<void> {
     console.log('handleIdentificationValue', value);
-    const identification = await window.MedicalRecordAPI.getPatientByCombinedKey(value);
+    const identification = await this.ipcMainService.getPatientByCombinedKey(
+      value
+    );
     this.identificationSearchResults.set(identification);
     console.log('identification', identification);
   }
 
   public async printDocument(): Promise<void> {
     // TODO: Define PrinterPdfAPI type in electron pre-render
-    await window.PrinterPdfAPI.billingSheetPrint({PK_Intake: this.form.value.PK_Intake});
+    await this.ipcMainService.billingSheetPrint({
+      PK_Intake: this.form.value.PK_Intake,
+    });
   }
 
   public handleSubmit(event: Event): void {
@@ -313,13 +289,15 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
     const currentSelectedCptCodes = this.selectedCptCodes();
 
     // Busca si ya existe el CPT code
-    let cptEntry = currentStateCpts.find(cpt => cpt.PK_cptcode === keyCptCode);
+    let cptEntry = currentStateCpts.find(
+      (cpt) => cpt.PK_cptcode === keyCptCode
+    );
 
     if (!cptEntry) {
       // Si no existe, lo creas
       cptEntry = {
         PK_cptcode: keyCptCode,
-        selectedOptions: cptCode.type === 'TEXT' ? [value.toUpperCase()] : []
+        selectedOptions: cptCode.type === 'TEXT' ? [value.toUpperCase()] : [],
       };
       currentStateCpts.push(cptEntry);
     } else if (cptCode.type === 'TEXT') {
@@ -332,15 +310,18 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
     // Actualiza el texto del CPT en el formulario
     const updatedCptText = {
       userCptOptions: this.cptJSonValues(),
-      usedCPTCodes: currentSelectedCptCodes
+      usedCPTCodes: currentSelectedCptCodes,
     };
 
     // Actualiza el formulario con la estructura completa
-    this.form.patchValue({
-      cptText: JSON.stringify(updatedCptText)
-    }, {
-      emitEvent: false,
-    });
+    this.form.patchValue(
+      {
+        cptText: JSON.stringify(updatedCptText),
+      },
+      {
+        emitEvent: false,
+      }
+    );
 
     console.log('Updated CPT Text:', updatedCptText);
   }
@@ -356,7 +337,9 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
     const currentSelectedCptCodes = this.selectedCptCodes();
 
     // Busca si ya existe el CPT code
-    let cptEntry = currentStateCpts.find(cpt => cpt.PK_cptcode === keyCptCode);
+    let cptEntry = currentStateCpts.find(
+      (cpt) => cpt.PK_cptcode === keyCptCode
+    );
 
     if (!cptEntry) {
       // Si no existe, lo creas
@@ -370,27 +353,44 @@ export class MerPagesBillingSheetCreateComponent implements OnInit {
         cptEntry.selectedOptions.push(value);
       }
     } else {
-      cptEntry.selectedOptions = cptEntry.selectedOptions.filter(opt => opt !== value);
+      cptEntry.selectedOptions = cptEntry.selectedOptions.filter(
+        (opt) => opt !== value
+      );
     }
     // Actualiza el signal
     this.cptJSonValues.set([...currentStateCpts]);
 
     const updatedCptText = {
       userCptOptions: this.cptJSonValues(),
-      usedCPTCodes: currentSelectedCptCodes
+      usedCPTCodes: currentSelectedCptCodes,
     };
 
-    this.form.patchValue({
-      cptText: JSON.stringify(updatedCptText),
-    }, {
-      emitEvent: false,
-    });
+    this.form.patchValue(
+      {
+        cptText: JSON.stringify(updatedCptText),
+      },
+      {
+        emitEvent: false,
+      }
+    );
     console.log('handleCptCheckboxChange', updatedCptText);
   }
 
   public async recordForm(record: any): Promise<void> {
+    //if for some reason the cptText arrives empty or in a default state, we have to patchi it back again,
+    // it is a bug that has to be fixed at some point...
+    const updatedCptText = {
+      userCptOptions: this.cptJSonValues(),
+      usedCPTCodes: this.selectedCptCodes(),
+    };
+
+      record.cptText = JSON.stringify(updatedCptText);
+
+
     console.log('recordForm', record);
-    const response = await window.MedicalRecordAPI.recordIntakeForm({intakeForm: record});
+    const response = await this.ipcMainService.recordIntakeForm({
+      intakeForm: record,
+    });
     this.saveForm.set(true);
     // send signal to print the pdf othe new record
     this.printDocument();

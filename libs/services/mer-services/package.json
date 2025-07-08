@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/core": "^19.2.0",
+    "electron-api-types": "0.0.1",
     "@angular/router": "~19.2.0",
     "@mer-ui/common": "0.0.1",
     "@mer/types": "0.0.1",

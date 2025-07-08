@@ -3,19 +3,22 @@ import {
   Component,
   effect,
   ElementRef,
+  inject,
   input,
   OnInit,
   output,
   signal,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { CPTCode } from '@mer/types';
+import { IpcMainService } from '@mer/services';
 import { debounceTime, fromEvent, map } from 'rxjs';
 
-
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'mer-cpt-select-dialog',
   imports: [CommonModule],
+  standalone: true,
   templateUrl: './cpt-select-dialog.component.html',
   styleUrl: './cpt-select-dialog.component.css',
 })
@@ -35,6 +38,8 @@ export class CptSelectDialogComponent implements OnInit {
     viewChild.required<ElementRef<HTMLInputElement>>('searchRef');
   public readonly dialog =
     viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
+
+  public ipcMainService = inject(IpcMainService);
 
   constructor() {
     effect(() => {
@@ -103,7 +108,7 @@ export class CptSelectDialogComponent implements OnInit {
   }
 
   public async loadCptCodes() {
-    const codes = await window.MedicalRecordAPI.getListCPTCodes();
+    const codes = await this.ipcMainService.getListCPTCodes();
 
     this.cptCodes.set(codes);
   }
@@ -118,7 +123,6 @@ export class CptSelectDialogComponent implements OnInit {
     this.dialog().nativeElement.close();
     this.closed.emit();
   }
-
 
   public openModal() {
     this.dialog().nativeElement.showModal();
@@ -138,8 +142,6 @@ export class CptSelectDialogComponent implements OnInit {
       )
     );
   }
-
-
 
   public createNewCptCode() {
     console.log('Create new CPT code');

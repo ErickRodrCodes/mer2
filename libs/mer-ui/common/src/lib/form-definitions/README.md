@@ -86,7 +86,7 @@ const customACNumber = InputTextFields.TEXT({
 ### Text Fields
 
 - `consecutiveNumber` - Hidden field for internal ID
-- `ACNumber` - Account number (context-dependent readonly)
+- `ACNumber` - Account number
 - `sonographer` - Sonographer name
 - `faxNumber` - Fax number with pattern validation
 - `facilityName`, `facilityAddress`, `facilityCity`, `facilityState`, `facilityZipcode`

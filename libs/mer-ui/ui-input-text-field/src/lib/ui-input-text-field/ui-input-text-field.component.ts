@@ -31,6 +31,7 @@ import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { InputTextField, ValidationRules } from '../types/types';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'mer-input-text-field',
   imports: [ReactiveFormsModule, HlmFormFieldModule, HlmInputDirective],
   providers: [
@@ -95,7 +96,6 @@ export class MerUIInputTextFieldComponent implements OnInit {
   public readonly inputControl: FormControl = new FormControl('');
 
   public readonly asyncValidationPending = signal(false);
-
 
   private readonly injector = inject(Injector);
 

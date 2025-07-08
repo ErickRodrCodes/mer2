@@ -3,10 +3,19 @@
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "electron-api-types/src",
   "projectType": "library",
+  "release": {
+    "version": {
+      "generatorOptions": {
+        "packageRoot": "dist/{projectRoot}",
+        "currentVersionResolver": "git-tag",
+        "fallbackCurrentVersionResolver": "disk"
+      }
+    }
+  },
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
+      "executor": "@nx/js:swc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/electron-api-types",
@@ -15,11 +24,9 @@
         "assets": ["electron-api-types/*.md"]
       }
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+    "nx-release-publish": {
       "options": {
-        "jestConfig": "electron-api-types/jest.config.ts"
+        "packageRoot": "dist/{projectRoot}"
       }
     }
   }

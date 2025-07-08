@@ -24,7 +24,5 @@
     "src/**/*.spec.jsx",
     "src/test-setup.ts"
   ],
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/augment-global.d.ts"]
 }

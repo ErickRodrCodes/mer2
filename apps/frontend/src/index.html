@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html class="h-full scroll-smooth overflow-x-hidden" lang="en" data-theme="dark">
-  <head>
-    <meta charset="utf-8" />
-    <title>M.U.S. Equipment Logger and Reporter</title>
-    <base href="./" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self' file:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:;"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self' file:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:;"
-    />
-    <script>
-      // Function to set theme based on media type
-      function setThemeForMedia() {
-        const html = document.documentElement;
-        if (window.matchMedia('print').matches) {
-          html.setAttribute('data-theme', 'light');
-        } else {
-          html.setAttribute('data-theme', 'dark');
-        }
+
+<head>
+  <meta charset="utf-8" />
+  <title>M.U.S. Equipment Logger and Reporter</title>
+  <base href="./" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' file:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:;" />
+  <meta http-equiv="X-Content-Security-Policy"
+    content="default-src 'self' file:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:;" />
+  <script>
+    // Function to set theme based on media type
+    function setThemeForMedia() {
+      const html = document.documentElement;
+      if (window.matchMedia('print').matches) {
+        html.setAttribute('data-theme', 'light');
+      } else {
+        html.setAttribute('data-theme', 'dark');
       }
+    }
 
-      // Set initial theme
-      setThemeForMedia();
+    // Set initial theme
+    setThemeForMedia();
 
-      // Listen for media type changes
-      window.matchMedia('print').addEventListener('change', setThemeForMedia);
-    </script>
-  </head>
-  <body>
-    <app-root></app-root>
-  </body>
+    // Listen for media type changes
+    window.matchMedia('print').addEventListener('change', setThemeForMedia);
+  </script>
+</head>
+
+<body>
+  <app-root></app-root>
+</body>
+
 </html>

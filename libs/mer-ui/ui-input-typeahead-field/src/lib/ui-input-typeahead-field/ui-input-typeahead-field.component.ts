@@ -9,7 +9,7 @@ import {
   OnInit,
   output,
   signal,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import {
   AsyncValidatorFn,
@@ -38,7 +38,12 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'mer-input-typeahead-field',
-  imports: [ReactiveFormsModule, HlmFormFieldModule, HlmInputDirective, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    HlmFormFieldModule,
+    HlmInputDirective,
+    CommonModule,
+  ],
   providers: [
     {
       provide: ErrorStateMatcher,
@@ -109,10 +114,7 @@ export class MerUIInputTypeaheadFieldComponent implements OnInit {
 
   public readonly currentValue = output<string>();
 
-
   public debounce = input<boolean>(true);
-
-
 
   public readonly formatOptionLabel = input<(item: any) => string>(() => '');
 
@@ -120,7 +122,8 @@ export class MerUIInputTypeaheadFieldComponent implements OnInit {
 
   public readonly typeAheadResultsDisplay = signal(false);
 
-  public readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
+  public readonly searchInput =
+    viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
 
   constructor(private injector: Injector) {
     // Setup form control and validators
@@ -142,11 +145,11 @@ export class MerUIInputTypeaheadFieldComponent implements OnInit {
     });
 
     effect(() => {
-        this.typeAheadResultsDisplay.set(this.typeAheadResults().length > 0);
+      this.typeAheadResultsDisplay.set(this.typeAheadResults().length > 0);
     });
 
     effect(() => {
-      if( this.typeAheadResults().length >= 0 ) {
+      if (this.typeAheadResults().length >= 0) {
         this.isSearching.set(false);
       }
     });
@@ -176,22 +179,24 @@ export class MerUIInputTypeaheadFieldComponent implements OnInit {
   }
 
   private emitCurrentValue(inputElement: HTMLInputElement) {
-    if( this.debounce() ) {
-      fromEvent<Event>(inputElement, 'keyup').pipe(
-        debounceTime<Event>(this.debounceTime()),
-        map((event) => (event.target as HTMLInputElement).value),
-        distinctUntilChanged()
-      ).subscribe(((text: string) => {
-        if( text.length > 0 ) {
-          this.isSearching.set(true);
-          this.currentValue.emit(text)
-        } else {
-          this.isSearching.set(false);
-        }
-      }))
+    if (this.debounce()) {
+      fromEvent<Event>(inputElement, 'keyup')
+        .pipe(
+          debounceTime<Event>(this.debounceTime()),
+          map((event) => (event.target as HTMLInputElement).value),
+          distinctUntilChanged()
+        )
+        .subscribe((text: string) => {
+          if (text.length > 0) {
+            this.isSearching.set(true);
+            this.currentValue.emit(text);
+          } else {
+            this.isSearching.set(false);
+          }
+        });
     } else {
-      if( inputElement.value.length > 0 ) {
-        this.currentValue.emit(inputElement.value)
+      if (inputElement.value.length > 0) {
+        this.currentValue.emit(inputElement.value);
         this.isSearching.set(true);
       } else {
         this.isSearching.set(false);

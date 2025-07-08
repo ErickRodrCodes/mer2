@@ -2,13 +2,14 @@
   "name": "@mer-ui/form/cpt-select-dialog",
   "version": "0.0.1",
   "peerDependencies": {
+    "@angular/common": "^19.2.0",
     "@angular/core": "^19.2.0",
+    "@mer/types": "0.0.1",
+    "@mer/services": "0.0.1",
+    "rxjs": "~7.8.0",
     "vite": "^6.0.0",
     "@analogjs/vite-plugin-angular": "~1.10.0",
-    "@nx/vite": "20.6.0",
-    "rxjs": "~7.8.0",
-    "@mer/electron-api": "0.0.1",
-    "@angular/common": "~19.2.0",
-    "@mer/types": "0.0.1"
-  }
+    "@nx/vite": "20.6.0"
+  },
+  "sideEffects": false
 }

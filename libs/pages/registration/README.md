@@ -1,7 +1,7 @@
-# @mer-pages/registration
+# registration
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Running unit tests
 
-Run `nx test @mer-pages/registration` to execute the unit tests.
+Run `nx test registration` to execute the unit tests.

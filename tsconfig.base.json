@@ -10,7 +10,10 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -30,30 +33,44 @@
       "@mer-pages/daily-report-view": [
         "libs/pages/daily-report-view/src/index.ts"
       ],
-      "@mer-pages/dashboard": ["libs/pages/dashboard/src/index.ts"],
-      "@mer-pages/login": ["libs/pages/login/src/index.ts"],
-      "@mer-pages/registration": ["libs/pages/registration/src/index.ts"],
-      "@mer-ui/common": ["libs/mer-ui/common/src/index.ts"],
+      "@mer-pages/dashboard": [
+        "libs/pages/dashboard/src/index.ts"
+      ],
+      "@mer-pages/login": [
+        "libs/pages/login/src/index.ts"
+      ],
+      "@mer-pages/registration": [
+        "libs/pages/registration/src/index.ts"
+      ],
+      "@mer-ui/common": [
+        "libs/mer-ui/common/src/index.ts"
+      ],
       "@mer-ui/form/cpt-select-dialog": [
         "libs/mer-ui/form/cpt-select-dialog/src/index.ts"
       ],
-      "@mer-ui/ui-header": ["libs/mer-ui/ui-header/src/index.ts"],
+      "@mer-ui/ui-header": [
+        "libs/mer-ui/ui-header/src/index.ts"
+      ],
       "@mer-ui/ui-input-text-field": [
         "libs/mer-ui/ui-input-text-field/src/index.ts"
       ],
       "@mer-ui/ui-input-typeahead-field": [
         "libs/mer-ui/ui-input-typeahead-field/src/index.ts"
       ],
-      "@mer-ui/ui-page-wrapper": ["libs/mer-ui/ui-page-wrapper/src/index.ts"],
-      "@mer-ui/ui-radio-group": ["libs/mer-ui/ui-radio-group/src/index.ts"],
-      "@mer/electron-api": ["electron-api-types/src/index.ts"],
-      "@mer/services": ["libs/services/mer-services/src/index.ts"],
-      "@mer/types": ["libs/types/src/index.ts"],
-      "@spartan-ng/ui-breadcrumb-helm": [
-        "libs/spartan-ui/ui-breadcrumb-helm/src/index.ts"
+      "@mer-ui/ui-page-wrapper": [
+        "libs/mer-ui/ui-page-wrapper/src/index.ts"
       ],
-      "@spartan-ng/ui-datepicker-helm": [
-        "libs/spartan-ui/ui-datepicker-helm/src/index.ts"
+      "@mer-ui/ui-radio-group": [
+        "libs/mer-ui/ui-radio-group/src/index.ts"
+      ],
+      "@mer/services": [
+        "libs/services/mer-services/src/index.ts"
+      ],
+      "@mer/types": [
+        "libs/types/src/index.ts"
+      ],
+      "electron-api-types": [
+        "electron-api-types/src/index.ts"
       ],
       "@spartan-ng/ui-formfield-helm": [
         "libs/spartan-ui/ui-formfield-helm/src/index.ts"
@@ -61,13 +78,13 @@
       "@spartan-ng/ui-input-helm": [
         "libs/spartan-ui/ui-input-helm/src/index.ts"
       ],
-      "@spartan-ng/ui-pagination-helm": [
-        "libs/spartan-ui/ui-pagination-helm/src/index.ts"
-      ],
       "@spartan-ng/ui-radiogroup-helm": [
         "libs/spartan-ui/ui-radiogroup-helm/src/index.ts"
       ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

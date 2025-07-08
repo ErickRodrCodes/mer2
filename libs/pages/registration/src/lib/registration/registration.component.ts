@@ -20,6 +20,7 @@ import {
 } from './registration.formDefinition';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IpcMainService } from '@mer/services';
 
 @Component({
   imports: [
@@ -27,8 +28,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MerUIInputTextFieldComponent,
     ReactiveFormsModule,
     FormsModule,
-    RouterModule
-],
+    RouterModule,
+  ],
+  providers: [IpcMainService],
+  standalone: true,
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.css',
 })
@@ -38,8 +41,7 @@ export class MerPagesRegistrationComponent implements OnInit {
   public readonly formBuilder = inject(FormBuilder);
   public readonly router = inject(Router);
   public readonly containerRef = inject(ViewContainerRef);
-  public readonly stateDialog: WritableSignal<boolean> =
-    signal(false);
+  public readonly stateDialog: WritableSignal<boolean> = signal(false);
   public readonly destroyRef = inject(DestroyRef);
 
   public readonly code_validation = code_validation;
@@ -48,6 +50,8 @@ export class MerPagesRegistrationComponent implements OnInit {
   public readonly password_validation = password_validation;
 
   public form = this.formBuilder.group({});
+
+  public ipcMainService = inject(IpcMainService);
 
   public async handleSubmit(event: Event): Promise<void> {
     event.preventDefault();
@@ -62,7 +66,7 @@ export class MerPagesRegistrationComponent implements OnInit {
         code: string;
         password: string;
       };
-      const response = await window.MedicalRecordAPI.addNewTechnician({
+      const response = await this.ipcMainService.addNewTechnician({
         technicianFirstName: formData.firstname,
         technicianLastName: formData.lastname,
         PK_techicianId: formData.code,

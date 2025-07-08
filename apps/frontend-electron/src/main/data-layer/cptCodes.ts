@@ -317,7 +317,7 @@ export const cptCodes: CPTCode[] = [
   {
     id: 29,
     PK_cptcode: 'CPT_93970',
-    abbreviation: '',
+    abbreviation: 'BLEV',
     type: 'CPT',
     code: '93970',
     description: 'Bilateral Lower Extremity Venous',

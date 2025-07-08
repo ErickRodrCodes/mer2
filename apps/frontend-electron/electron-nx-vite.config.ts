@@ -13,33 +13,22 @@ const logger = createLogger('info', {
   prefix: '[Nx Electron Vite Plugin]',
 });
 
-const pkg =  JSON.parse(readFileSync(resolve(workspaceRoot, 'package.json'), 'utf-8'));
+const pkg = JSON.parse(
+  readFileSync(resolve(workspaceRoot, 'package.json'), 'utf-8')
+);
 const dependencies = Object.keys('dependencies' in pkg ? pkg.dependencies : {});
 
 function cleanDist(): Plugin {
   return {
-    name: 'clean-dist',
+    name: 'build-start-task',
     buildStart() {
-      // const distPath = resolve(workspaceRoot, 'dist/frontend-app');
-      // if (existsSync(distPath)) {
-      //   logger.info('🗑️  Removing dist folder: ' + distPath, {
-      //     timestamp: true,
-      //   });
-      //   try {
-      //     rimraf.sync(distPath);
-      //   } catch {
-      //     logger.error('⛔ Failed to remove dist folder: ' + distPath, {
-      //       timestamp: true,
-      //     });
-      //     logger.error('⛔ Resource is busy and cannot be removed.', {
-      //       timestamp: true,
-      //     });
-      //   }
-      // }
+      // here a example of code you can use to execute something at the start of the build process
+      logger.info('⚠️ Started Vite Build Start lifecycle');
     },
     closeBundle() {
-      // Do nothing - we don't want to clean after build
-    }
+      // here a example of code you can use to execute something at the start of the build process
+      logger.info('⚠️ Started Vite Build close bundle lifecycle');
+    },
   };
 }
 
@@ -127,6 +116,8 @@ export async function electronNxViteConfig() {
           workspaceRoot,
           'dist/apps/frontend-electron/main.js'
         );
+        const debugPortMain = process.env['DEBUG_PORT_MAIN'] ?? 5858;
+        const debugPortRenderer = process.env['DEBUG_PORT_RENDERER'] ?? 4975;
         logger.info('🚀 Starting Electron with main path: ' + mainPath, {
           timestamp: true,
         });
@@ -135,11 +126,11 @@ export async function electronNxViteConfig() {
             /**
              * port to debug the main process
              */
-            '--inspect=5858',
+            `--inspect=${debugPortMain}`,
             /**
              * port to debug the renderer process
              */
-            '--remote-debugging-port=4975',
+            `--remote-debugging-port=${debugPortRenderer}`,
             /**
              * additional flags
              */
@@ -190,10 +181,12 @@ export async function electronNxViteConfig() {
       vite: withDebug({
         logLevel: 'info',
         build: {
-
           outDir: resolve(workspaceRoot, 'dist/apps/frontend-electron'),
           sourcemap: 'inline',
           rollupOptions: {
+            /**
+             * use the dependencies declared on the package.json
+             */
             external: dependencies,
             output: {
               entryFileNames: '[name].js',

@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+# Gets a list of files in staging, separated by commas for Nx
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | paste -sd "," -)
+
+if [ -z "$FILES" ]; then
+  exit 0
+fi
+
+echo "Running checks on the files in staging..."
+
+# Runs linting and formatting
+npx nx affected -t lint format --files="$FILES" --fix
+
+# Re-adds all files in staging to capture any corrections
+git diff --cached --name-only --diff-filter=ACMR | while read -r file; do
+  git add "$file"
+done

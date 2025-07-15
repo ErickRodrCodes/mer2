@@ -76,7 +76,8 @@ export class DB {
     const cptCodesQueries = Object.values(contentCptCodeOptions);
     logger.info('🔄 Initializing database...');
 
-    // await this.dropIntakeFormTables();
+    // remove this prior to any sort of production
+    await this.dropIntakeFormTables();
 
     for (const query of queries) {
       this.db.exec(query);
@@ -573,7 +574,9 @@ export class DB {
     // best case scenario, is to obtain the list of cpt codes AS A MAP.
     // yes a F MAP, looping into shit is not nice at all....
 
-    const rawCptCodesMap = new Map(cptCodes.map((cpt) => [cpt.PK_cptcode, cpt]));
+    const rawCptCodesMap = new Map(
+      cptCodes.map((cpt) => [cpt.PK_cptcode, cpt])
+    );
 
     const listIntakes = intakes.map((intake: IntakeFormSchema) => {
       const {
@@ -600,12 +603,15 @@ export class DB {
 
       const rawCptCodes = cptCodes;
 
-      const mapSelectedOptions = new Map(textCpt.userCptOptions.map((userCptCode) => [userCptCode.PK_cptcode, userCptCode.selectedOptions]));
+      const mapSelectedOptions = new Map(
+        textCpt.userCptOptions.map((userCptCode) => [
+          userCptCode.PK_cptcode,
+          userCptCode.selectedOptions,
+        ])
+      );
 
       // from the selected used cpt codes extract the abbreviations
-      const abbreviations:string[] = [];
-
-
+      const abbreviations: string[] = [];
 
       textCpt.usedCPTCodes.forEach((cpt: CPTCode) => {
         const rawCptCode = rawCptCodesMap.get(cpt.PK_cptcode);
@@ -614,22 +620,35 @@ export class DB {
           if (rawCptCode.abbreviation) {
             abbreviations.push(rawCptCode.abbreviation);
           } else {
-            if(rawCptCode.type === 'CPT'){
-            const options = rawCptCode.options as { type: string; values: { abbreviation: string; optionId: string; label: string }[] };
-            const values = options.values;
-            if (options) {
-              options.values.forEach((value) => {
-                const selectedOptions = mapSelectedOptions.get(rawCptCode.PK_cptcode);
-                selectedOptions.forEach((option) => {
-
-                const findAbbreviation = values.find((item) => item.label === option);
-                if (findAbbreviation && findAbbreviation.abbreviation !== '') {
-                  abbreviations.push(findAbbreviation.abbreviation);
-                }
-              });
-            });
+            if (rawCptCode.type === 'CPT') {
+              const options = rawCptCode.options as {
+                type: string;
+                values: {
+                  abbreviation: string;
+                  optionId: string;
+                  label: string;
+                }[];
+              };
+              const values = options.values;
+              if (options) {
+                options.values.forEach((value) => {
+                  const selectedOptions = mapSelectedOptions.get(
+                    rawCptCode.PK_cptcode
+                  );
+                  selectedOptions.forEach((option) => {
+                    const findAbbreviation = values.find(
+                      (item) => item.label === option
+                    );
+                    if (
+                      findAbbreviation &&
+                      findAbbreviation.abbreviation !== ''
+                    ) {
+                      abbreviations.push(findAbbreviation.abbreviation);
+                    }
+                  });
+                });
+              }
             }
-          }
           }
         }
       });

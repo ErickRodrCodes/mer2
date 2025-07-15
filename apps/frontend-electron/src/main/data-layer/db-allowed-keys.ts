@@ -24,5 +24,5 @@ export const with_DB_AllowedMethodNames: readonly DBMethodName[] = [
   'updateIntakeForm',
   'getFacilitiesByString',
   'recordNewFacility',
-  'getRightTodayDate'
+  'getRightTodayDate',
 ] as const;
